@@ -77,6 +77,7 @@ module.exports = function (Topics) {
     };
 
     Topics.post = async function (data) {
+        // console.log(data, 'from topics.post');
         data = await plugins.hooks.fire('filter:topic.post', data);
         const { uid } = data;
 
@@ -156,6 +157,7 @@ module.exports = function (Topics) {
     };
 
     Topics.reply = async function (data) {
+        console.log(data, 'from topics reply');
         data = await plugins.hooks.fire('filter:topic.reply', data);
         const { tid } = data;
         const { uid } = data;

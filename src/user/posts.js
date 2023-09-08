@@ -45,17 +45,18 @@ module.exports = function (User) {
             throw new Error(`[[error:user-too-new, ${meta.config.initialPostDelay}]]`);
         }
 
-        const lasttime = userData[field] || 0;
+        // const lasttime = userData[field] || 0;
 
-        if (
-            meta.config.newbiePostDelay > 0 &&
-            meta.config.newbiePostDelayThreshold > userData.reputation &&
-            now - lasttime < meta.config.newbiePostDelay * 1000
-        ) {
-            throw new Error(`[[error:too-many-posts-newbie, ${meta.config.newbiePostDelay}, ${meta.config.newbiePostDelayThreshold}]]`);
-        } else if (now - lasttime < meta.config.postDelay * 1000) {
-            throw new Error(`[[error:too-many-posts, ${meta.config.postDelay}]]`);
-        }
+        // if (
+        //     meta.config.newbiePostDelay > 0 &&
+        //     meta.config.newbiePostDelayThreshold > userData.reputation &&
+        //     now - lasttime < meta.config.newbiePostDelay * 1000
+        // ) {
+        //     throw new Error(`[[error:too-many-posts-newbie,
+        // ${meta.config.newbiePostDelay}, ${meta.config.newbiePostDelayThreshold}]]`);
+        // } else if (now - lasttime < meta.config.postDelay * 1000) {
+        //     throw new Error(`[[error:too-many-posts, ${meta.config.postDelay}]]`);
+        // }
     }
 
     User.onNewPostMade = async function (postData) {
