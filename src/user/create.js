@@ -98,11 +98,20 @@ module.exports = function (User) {
             bulkAdd.push(['fullname:sorted', 0, `${userData.fullname.toLowerCase()}:${userData.uid}`]);
         }
 
+        // change default classes, to assign users stundet / instructor groups
+        const defaultGroups = ['registered-users', 'unverified-users'];
+        if (userData.accounttype.toLowerCase() === 'instructor') {
+            defaultGroups.push('instructor');
+        }
+        if (userData.accounttype.toLowerCase() === 'student') {
+            defaultGroups.push('student');
+        }
+
         await Promise.all([
             db.incrObjectField('global', 'userCount'),
             analytics.increment('registrations'),
             db.sortedSetAddBulk(bulkAdd),
-            groups.join(['registered-users', 'unverified-users'], userData.uid),
+            groups.join(defaultGroups, userData.uid),
             User.notifications.sendWelcomeNotification(userData.uid),
             storePassword(userData.uid, data.password),
             User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq),
