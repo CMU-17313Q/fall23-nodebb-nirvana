@@ -32,6 +32,7 @@ module.exports = function (Topics) {
             timestamp: timestamp,
             lastposttime: 0,
             postcount: 0,
+            postType: data.postType,
             viewcount: 0,
         };
 
