@@ -214,6 +214,11 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
     topicData.icons = [];
 
     const result = await plugins.hooks.fire('filter:topic.get', { topic: topicData, uid: uid });
+
+    if (topicData.postType === 'anon') {
+        topicData.uid = 0;
+    }
+
     return result.topic;
 };
 

@@ -107,6 +107,9 @@ module.exports = function (Topics) {
         if (!Array.isArray(postData) || !postData.length) {
             return [];
         }
+
+        console.log('addPostData is called with', postData);
+
         const pids = postData.map(post => post && post.pid);
 
         async function getPostUserData(field, method) {
@@ -128,7 +131,6 @@ module.exports = function (Topics) {
             getPostReplies(pids, uid),
             Topics.addParentPosts(postData),
         ]);
-
         postData.forEach((postObj, i) => {
             if (postObj) {
                 postObj.user = postObj.uid ? userData[postObj.uid] : { ...userData[postObj.uid] };
@@ -139,6 +141,17 @@ module.exports = function (Topics) {
                 postObj.votes = postObj.votes || 0;
                 postObj.replies = replies[i];
                 postObj.selfPost = parseInt(uid, 10) > 0 && parseInt(uid, 10) === postObj.uid;
+
+                // allow instructors to see the anon
+                if (postObj.postType === 'anon' && !postObj.selfPost) {
+                    postObj.uid = 0;
+                    postObj.user = {
+                        username: 'Anonymous',
+                        anon: true,
+                        displayname: 'Anonymous',
+                    };
+                    postObj.postTypeAnon = true;
+                }
 
                 // Username override for guests, if enabled
                 if (meta.config.allowGuestHandles && postObj.uid === 0 && postObj.handle) {
@@ -321,7 +334,7 @@ module.exports = function (Topics) {
 
         const uniquePids = _.uniq(_.flatten(arrayOfReplyPids));
 
-        let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp']);
+        let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp', 'postType']);
         const result = await plugins.hooks.fire('filter:topics.getPostReplies', {
             uid: callerUid,
             replies: replyData,
@@ -352,7 +365,7 @@ module.exports = function (Topics) {
 
             replyPids.forEach((replyPid) => {
                 const replyData = pidMap[replyPid];
-                if (!uidsUsed[replyData.uid] && currentData.users.length < 6) {
+                if (!uidsUsed[replyData.uid] && currentData.users.length < 6 && replyData.postType !== 'anon') {
                     currentData.users.push(uidMap[replyData.uid]);
                     uidsUsed[replyData.uid] = true;
                 }
