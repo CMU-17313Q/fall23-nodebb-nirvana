@@ -198,8 +198,6 @@ module.exports = function (Posts) {
             postType: data.postType,
         };
 
-        console.log(editPostData);
-
         // For posts in scheduled topics, if edited before, use edit timestamp
         editPostData.edited = topicData.scheduled ? (postData.edited || postData.timestamp) + 1 : Date.now();
 
