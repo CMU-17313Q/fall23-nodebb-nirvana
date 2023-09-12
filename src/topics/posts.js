@@ -108,8 +108,6 @@ module.exports = function (Topics) {
             return [];
         }
 
-        console.log('addPostData is called with', postData);
-
         const pids = postData.map(post => post && post.pid);
 
         async function getPostUserData(field, method) {

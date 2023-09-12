@@ -78,7 +78,6 @@ module.exports = function (Topics) {
     };
 
     Topics.post = async function (data) {
-        console.log('topics.post', data);
         data = await plugins.hooks.fire('filter:topic.post', data);
         const { uid } = data;
 
@@ -120,7 +119,6 @@ module.exports = function (Topics) {
         postData.ip = data.req ? data.req.ip : null;
         postData.isMain = true;
         postData = await posts.create(postData);
-        console.log(postData, 'from create topicCreate');
         postData = await onNewPost(postData, data);
 
         const [settings, topics] = await Promise.all([
