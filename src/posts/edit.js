@@ -195,6 +195,7 @@ module.exports = function (Posts) {
         const editPostData = {
             content: data.content,
             editor: data.uid,
+            postType: data.postType,
         };
 
         // For posts in scheduled topics, if edited before, use edit timestamp
