@@ -712,7 +712,7 @@ define('composer', [
 				postType: postType,
 			};
 		} else if (action === 'posts.reply') {
-			console.log("doing something in the reply")
+			
 			route = `/topics/${postData.tid}`;
 			composerData = {
 				...composerData,
@@ -778,7 +778,7 @@ define('composer', [
 						ajaxify.go('topic/' + data.slug, undefined, (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm'));
 					}
 				} else if (action === 'posts.reply') {
-					console.log("replying");
+					
 					if (onComposeRoute || composer.bsEnvironment === 'xs' || composer.bsEnvironment === 'sm') {
 						window.history.back();
 					} else if (submitHookData.redirect &&
