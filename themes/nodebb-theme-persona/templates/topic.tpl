@@ -16,6 +16,7 @@
                         {{{each icons}}}{@value}{{{end}}}
                     </span>
                     <span component="topic/title">{title}</span>
+                    <i class="fas fa-theater-masks icon-{postType}"></i>
                 </span>
             </h1>
 
