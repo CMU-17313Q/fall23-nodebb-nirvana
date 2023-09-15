@@ -146,7 +146,9 @@ User.isModeratorOfAnyCategory = async function (uid) {
 };
 
 User.isAdministrator = async function (uid) {
-    return await privileges.users.isAdministrator(uid);
+    const isAdmin = await privileges.users.isAdministrator(uid);
+    const isInstructor = await privileges.users.isInstructor(uid);
+    return isAdmin || isInstructor;
 };
 
 User.isGlobalModerator = async function (uid) {
