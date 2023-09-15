@@ -7,6 +7,7 @@ const nconf = require('nconf');
 
 const db = require('../database');
 const user = require('../user');
+const previlgies = require('../privileges');
 const posts = require('../posts');
 const meta = require('../meta');
 const plugins = require('../plugins');
@@ -129,6 +130,7 @@ module.exports = function (Topics) {
             getPostReplies(pids, uid),
             Topics.addParentPosts(postData),
         ]);
+        const isReaderInstructor = await previlgies.users.isInstructor(parseInt(uid, 10));
         postData.forEach((postObj, i) => {
             if (postObj) {
                 postObj.user = postObj.uid ? userData[postObj.uid] : { ...userData[postObj.uid] };
@@ -141,7 +143,7 @@ module.exports = function (Topics) {
                 postObj.selfPost = parseInt(uid, 10) > 0 && parseInt(uid, 10) === postObj.uid;
 
                 // allow instructors to see the anon
-                if (postObj.postType === 'anon' && !postObj.selfPost) {
+                if (postObj.postType === 'anon' && !postObj.selfPost && !isReaderInstructor) {
                     postObj.uid = 0;
                     postObj.user = {
                         username: 'Anonymous',
