@@ -28,6 +28,9 @@ Groups.ephemeralGroups = ['guests', 'spiders'];
 
 Groups.systemGroups = [
     'registered-users',
+    // new default groups
+    'students',
+    'instructors',
     'verified-users',
     'unverified-users',
     Groups.BANNED_USERS,
