@@ -332,7 +332,7 @@ module.exports = function (Topics) {
 
         const uniquePids = _.uniq(_.flatten(arrayOfReplyPids));
 
-        let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp', 'postType']);
+        let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp', 'postType', 'postVisibility']);
         const result = await plugins.hooks.fire('filter:topics.getPostReplies', {
             uid: callerUid,
             replies: replyData,

@@ -219,6 +219,10 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
         topicData.uid = 0;
     }
 
+    if (topicData.postVisibility === 'priv') {
+        topicData.uid = 0;
+    }
+
     return result.topic;
 };
 

@@ -17,6 +17,7 @@ module.exports = function (Posts) {
         const { uid } = data;
         const { tid } = data;
         const { postType } = data;
+        const { postVisibility } = data;
         const content = data.content.toString();
         const timestamp = data.timestamp || Date.now();
         const isMain = data.isMain || false;
@@ -34,6 +35,7 @@ module.exports = function (Posts) {
             uid: uid,
             tid: tid,
             postType: postType,
+            postVisibility: postVisibility,
             content: content,
             timestamp: timestamp,
         };

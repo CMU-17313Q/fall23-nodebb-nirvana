@@ -33,6 +33,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             postType: data.postType,
+            postVisibility: data.postVisibility,
             viewcount: 0,
         };
 
