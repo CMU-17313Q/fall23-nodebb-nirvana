@@ -18,8 +18,8 @@ permissions:
 jobs:
   test:
     permissions:
-      checks: write  # for coverallsapp/github-action to create new checks
-      contents: read  # for actions/checkout to fetch code
+      checks: write # for coverallsapp/github-action to create new checks
+      contents: read # for actions/checkout to fetch code
     name: Test
     strategy:
       fail-fast: false
@@ -41,7 +41,7 @@ jobs:
 
     services:
       redis:
-        image: 'redis:2.8.23'
+        image: "redis:2.8.23"
         # Set health checks to wait until redis has started
         options: >-
           --health-cmd "redis-cli ping"
@@ -66,7 +66,7 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
-          
+
       - name: Setup on Redis
         if: startsWith(matrix.database, 'redis')
         env:
@@ -110,7 +110,7 @@ jobs:
 
   finish:
     permissions:
-      checks: write  # for coverallsapp/github-action to create new checks
+      checks: write # for coverallsapp/github-action to create new checks
     needs: test
     runs-on: ubuntu-latest
     steps:
