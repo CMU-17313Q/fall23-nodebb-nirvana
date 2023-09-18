@@ -2,7 +2,7 @@
 	{
 		"widget": "html",
 		"data" : {
-			"html": "<footer id='footer' class='container footer'></footer>",
+			"html": "<footer id=\"footer\" class=\"container footer\">\n\t<div>\n\t\tNodeBB extended by Nirvana\n\t</div>\n</footer>",
 			"title":"",
 			"container":""
 		}
