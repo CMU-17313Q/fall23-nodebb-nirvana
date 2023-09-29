@@ -91,6 +91,47 @@ describe('Post\'s', () => {
         });
     });
 
+    describe('Anonymous posts', () => {
+        it('should not anonimize for post author', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student1Uid, 0, 19);
+            assert.equal(topicRead.posts[0].user.uid, student1Uid);
+        });
+
+        it('should not anonimize for non post author', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+            assert.equal(topicRead.posts[0].user.anon, true);
+        });
+
+        it('should not anonimize for instructor', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, instructorUid, 0, 19);
+            assert.equal(topicRead.posts[0].user.uid, student1Uid);
+        });
+    });
+
     it('should update category teaser properly', async () => {
         const util = require('util');
         const getCategoriesAsync = util.promisify(async (callback) => {
