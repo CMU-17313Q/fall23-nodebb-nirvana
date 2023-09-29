@@ -31,6 +31,9 @@ describe('Post\'s', () => {
     let postData;
     let topicData;
     let cid;
+    let student1Uid;
+    let student2Uid;
+    let instructorUid;
 
     before((done) => {
         async.series({
@@ -49,6 +52,15 @@ describe('Post\'s', () => {
                     description: 'Test category created by testing script',
                 }, next);
             },
+            student1Uid: function (next) {
+                user.create({ username: 'student1Uid' }, next);
+            },
+            student2Uid: function (next) {
+                user.create({ username: 'student2Uid' }, next);
+            },
+            instructorUid: function (next) {
+                user.create({ username: 'instructor', accounttype: 'instructor' }, next);
+            },
         }, (err, results) => {
             if (err) {
                 return done(err);
@@ -56,6 +68,9 @@ describe('Post\'s', () => {
 
             voterUid = results.voterUid;
             voteeUid = results.voteeUid;
+            student1Uid = results.student1Uid;
+            student2Uid = results.student2Uid;
+            instructorUid = results.instructorUid;
             globalModUid = results.globalModUid;
             cid = results.category.cid;
 
