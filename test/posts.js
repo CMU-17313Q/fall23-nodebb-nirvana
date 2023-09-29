@@ -31,6 +31,9 @@ describe('Post\'s', () => {
     let postData;
     let topicData;
     let cid;
+    let student1Uid;
+    let student2Uid;
+    let instructorUid;
 
     before((done) => {
         async.series({
@@ -49,6 +52,15 @@ describe('Post\'s', () => {
                     description: 'Test category created by testing script',
                 }, next);
             },
+            student1Uid: function (next) {
+                user.create({ username: 'student1Uid' }, next);
+            },
+            student2Uid: function (next) {
+                user.create({ username: 'student2Uid' }, next);
+            },
+            instructorUid: function (next) {
+                user.create({ username: 'instructor', accounttype: 'instructor' }, next);
+            },
         }, (err, results) => {
             if (err) {
                 return done(err);
@@ -56,6 +68,9 @@ describe('Post\'s', () => {
 
             voterUid = results.voterUid;
             voteeUid = results.voteeUid;
+            student1Uid = results.student1Uid;
+            student2Uid = results.student2Uid;
+            instructorUid = results.instructorUid;
             globalModUid = results.globalModUid;
             cid = results.category.cid;
 
@@ -73,6 +88,47 @@ describe('Post\'s', () => {
 
                 groups.join('Global Moderators', globalModUid, done);
             });
+        });
+    });
+
+    describe('Anonymous posts', () => {
+        it('should not anonimize for post author', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student1Uid, 0, 19);
+            assert.equal(topicRead.posts[0].user.uid, student1Uid);
+        });
+
+        it('should not anonimize for non post author', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+            assert.equal(topicRead.posts[0].user.anon, true);
+        });
+
+        it('should not anonimize for instructor', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, instructorUid, 0, 19);
+            assert.equal(topicRead.posts[0].user.uid, student1Uid);
         });
     });
 
