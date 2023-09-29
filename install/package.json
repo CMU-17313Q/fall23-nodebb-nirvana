@@ -28,6 +28,9 @@
         ]
     },
     "dependencies": {
+        "@textcomplete/contenteditable": "^0.1.12",
+        "@textcomplete/core": "^0.1.12",
+        "@textcomplete/textarea": "^0.1.12",
         "@adactive/bootstrap-tagsinput": "0.8.2",
         "@isaacs/ttlcache": "1.2.1",
         "@nodebb/bootswatch": "3.4.2",
@@ -118,6 +121,7 @@
         "rimraf": "3.0.2",
         "rss": "1.2.2",
         "sanitize-html": "2.8.1",
+        "screenfull": "^5.0.2",
         "semver": "7.3.8",
         "serve-favicon": "2.5.0",
         "sharp": "0.31.3",
