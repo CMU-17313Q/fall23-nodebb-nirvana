@@ -911,4 +911,30 @@ describe('Categories', () => {
         assert.strictEqual(child1.cid, data.children[0].cid);
         assert.strictEqual(child2.cid, data.children[0].children[0].cid);
     });
+
+    it('should anonimize posts with anon type', async () => {
+        // create a new category
+        const anonTestCategory = await Categories.create({ name: 'anonTest' });
+        await Topics.create({
+            uid: posterUid,
+            cid: anonTestCategory.cid,
+            title: 'This is purely for testing and I am not even kidding',
+            content: 'This is purely for testing and I am not even kidding',
+            postType: 'anon',
+        });
+        // create a new category
+        const { topics } = await Categories.getCategoryById({
+            uid: posterUid,
+            cid: anonTestCategory.cid,
+            start: 0,
+            stop: 19,
+        });
+        // perform the modifications done by the controllers
+        Categories.modifyTopicsByPrivilege(topics, []);
+        // do assertions
+        assert.equal(topics[0].uid, 0);
+        assert.equal(topics[0].user.displayname, 'Anonymous');
+        assert.equal(topics[0].user.username, 'Anonymous');
+        assert(topics[0].user.anon);
+    });
 });
