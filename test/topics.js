@@ -81,6 +81,37 @@ describe('Topic\'s', () => {
             });
         });
 
+
+        it('should create a public post by default', (done) => {
+            topics.post({
+                uid: topic.userId,
+                title: topic.title,
+                content: topic.content,
+                cid: topic.categoryId,
+            }, (err, result) => {
+                assert.ifError(err);
+                assert(result);
+                assert.equal(result.topicData.postType, 'public');
+                done();
+            });
+        });
+
+        it('should create a new anon topic with proper parameters', (done) => {
+            topics.post({
+                uid: topic.userId,
+                title: topic.title,
+                content: topic.content,
+                cid: topic.categoryId,
+                postType: 'anon',
+            }, (err, result) => {
+                assert.ifError(err);
+                assert(result);
+                assert.equal(result.topicData.postType, 'anon');
+                done();
+            });
+        });
+
+
         it('should get post count', (done) => {
             socketTopics.postcount({ uid: adminUid }, topic.tid, (err, count) => {
                 assert.ifError(err);
