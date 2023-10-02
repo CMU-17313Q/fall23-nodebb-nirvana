@@ -18,11 +18,11 @@ privsTopics.privatePostFiltering = (topicData, readerUid, isReaderInstructor) =>
     if (topicData.postType !== 'private') {
         return true;
     }
-    //Should not be hidden from the user
+    // Should not be hidden from the user
     if (topicData.uid === readerUid) {
         return true;
     }
-    //Instructors see private posts
+    // Instructors see private posts
     if (isReaderInstructor) {
         return true;
     }
