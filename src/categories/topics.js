@@ -6,6 +6,7 @@ const plugins = require('../plugins');
 const meta = require('../meta');
 const privileges = require('../privileges');
 const user = require('../user');
+const { privatePostFiltering } = require('../privileges/topics');
 
 module.exports = function (Categories) {
     Categories.getCategoryTopics = async function (data) {
@@ -154,9 +155,25 @@ module.exports = function (Categories) {
         return await topics.tools.checkPinExpiry(pinnedTids);
     };
 
-    Categories.modifyTopicsByPrivilege = function (topics, privileges) {
-        if (!Array.isArray(topics) || !topics.length || privileges.view_deleted) {
+    Categories.modifyTopicsByPrivilege = function (topics, privileges, uid, isReaderInstructor) {
+        if (!Array.isArray(topics) || !topics.length) {
             return;
+        }
+        if (privileges.hasOwnProperty('view_deleted') && privileges.view_deleted) {
+            return;
+        }
+
+        // finding topics that are private
+        const toBeRemoved = [];
+        topics.forEach((topic, index) => {
+            if (!privatePostFiltering(topic, uid, isReaderInstructor)) {
+                toBeRemoved.push(index);
+            }
+        });
+        // removing topics
+        // https://stackoverflow.com/questions/9425009/remove-multiple-elements-from-array-in-javascript-jquery
+        while (toBeRemoved.length) {
+            topics.splice(toBeRemoved.pop(), 1);
         }
 
         topics.forEach((topic) => {

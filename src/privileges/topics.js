@@ -13,6 +13,22 @@ const privsCategories = require('./categories');
 
 const privsTopics = module.exports;
 
+privsTopics.privatePostFiltering = (topicData, readerUid, isReaderInstructor) => {
+    // only private posts can be hidden from other users
+    if (topicData.postType !== 'private') {
+        return true;
+    }
+    // Should not be hidden from the user
+    if (topicData.uid === readerUid) {
+        return true;
+    }
+    // Instructors see private posts
+    if (isReaderInstructor) {
+        return true;
+    }
+    return false;
+};
+
 privsTopics.get = async function (tid, uid) {
     uid = parseInt(uid, 10);
 

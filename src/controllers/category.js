@@ -15,6 +15,7 @@ const helpers = require('./helpers');
 const utils = require('../utils');
 const translator = require('../translator');
 const analytics = require('../analytics');
+const { isInstructor } = require('../privileges/users');
 
 const categoryController = module.exports;
 
@@ -94,7 +95,8 @@ categoryController.get = async function (req, res, next) {
         return next();
     }
 
-    categories.modifyTopicsByPrivilege(categoryData.topics, userPrivileges);
+    const isUserInstructor = await isInstructor(req.uid);
+    categories.modifyTopicsByPrivilege(categoryData.topics, userPrivileges, req.uid, isUserInstructor);
     categoryData.tagWhitelist = categories.filterTagWhitelist(categoryData.tagWhitelist, userPrivileges.isAdminOrMod);
 
     await buildBreadcrumbs(req, categoryData);
