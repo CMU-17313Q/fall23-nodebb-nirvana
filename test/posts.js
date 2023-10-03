@@ -669,7 +669,7 @@ describe('Post\'s', () => {
 
             // assert anonymous
             assert.equal(editedTopicRead.posts[0].user.anon, true);
-        }); 
+        });
 
         it('should disallow post editing for new users if post was made past the threshold for editing', async () => {
             meta.config.newbiePostEditDuration = 1;
