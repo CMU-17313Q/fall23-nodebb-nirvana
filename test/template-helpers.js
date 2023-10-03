@@ -166,6 +166,13 @@ describe('helpers', () => {
         done();
     });
 
+    it('should render anon avatar', (done) => {
+        const anonUser = { user: { username: 'Anonymous' }, anon: true };
+        const html = helpers.buildAvatar(anonUser);
+        assert.equal(html, `<span class="avatar  avatar-sm" alt="undefined" title="undefined" data-uid="undefined" loading="lazy" component="avatar/icon" style="background-color: #606060;"><i class="fa fa-user"></i></span>`);
+        done();
+    });
+
     it('should render digest avatar', (done) => {
         const block = { teaser: { user: { username: 'baris', picture: '/uploads/1.png' } } };
         const html = helpers.renderDigestAvatar(block);
