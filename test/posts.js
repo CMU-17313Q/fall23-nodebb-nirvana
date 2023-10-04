@@ -663,7 +663,7 @@ describe('Post\'s', () => {
                 title: 'edited title',
                 postType: 'anon',
                 tags: ['edited'],
-            }); 
+            });
 
             const editedTopicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
 
