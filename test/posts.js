@@ -597,6 +597,80 @@ describe('Post\'s', () => {
             assert(!res.hasOwnProperty('bookmarks'));
         });
 
+        it('should edit anonymity post', async () => {
+            const data = await apiPosts.edit({ uid: voterUid }, {
+                pid: pid,
+                content: 'edited post content',
+                title: 'edited title',
+                postType: 'anon',
+                tags: ['edited'],
+            });
+
+            assert.strictEqual(data.content, 'edited post content');
+            assert.strictEqual(data.postType, 'anon');
+            const res = await db.getObject(`post:${pid}`);
+            assert.equal(res.postType, 'anon');
+        });
+
+        it('should not anonimize a post with edited visibility', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'anon',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+
+            assert.equal(topicRead.posts[0].user.uid, undefined);
+            const { pid } = topicRead.posts[0];
+
+            // edit visiblity to public
+            await apiPosts.edit({ uid: student1Uid }, {
+                pid: pid,
+                content: 'edited post content',
+                title: 'edited title',
+                postType: 'public',
+                tags: ['edited'],
+            });
+
+            const editedTopicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+
+            // assert non-anonymous
+            assert.equal(editedTopicRead.posts[0].user.uid, student1Uid);
+        });
+
+        it('should not anonimize a post with edited visibility', async () => {
+            const data = await topics.post({
+                uid: student1Uid,
+                cid: cid,
+                title: 'Anon Topic Title',
+                content: 'The content of anon topic',
+                postType: 'public',
+            });
+            const { tid } = data.postData;
+            const topicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+
+            // assert non-anonymous
+            assert.equal(topicRead.posts[0].user.uid, student1Uid);
+            const { pid } = topicRead.posts[0];
+
+            // edit visiblity to anon
+            await apiPosts.edit({ uid: student1Uid }, {
+                pid: pid,
+                content: 'edited post content',
+                title: 'edited title',
+                postType: 'anon',
+                tags: ['edited'],
+            });
+
+            const editedTopicRead = await topics.getTopicWithPosts(data.postData.topic, `tid:${tid}:posts`, student2Uid, 0, 19);
+
+            // assert anonymous
+            assert.equal(editedTopicRead.posts[0].user.anon, true);
+        });
+
         it('should disallow post editing for new users if post was made past the threshold for editing', async () => {
             meta.config.newbiePostEditDuration = 1;
             await sleep(1000);
