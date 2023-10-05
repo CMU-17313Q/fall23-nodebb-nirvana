@@ -36,6 +36,8 @@ get:
                     type: string
                   timestamp:
                     type: number
+                  postType:
+                    type: string
                   flagId:
                     type: number
                   deleted:
