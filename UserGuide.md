@@ -95,7 +95,7 @@ Manual testing was also conducted by all team members following the steps below 
 1. Log in with their Instructor accounts.
 2. Enable anonymous posting.
 3. Create test posts.
-4. Verify that their name is hidden from public view.
+4. Verify that student name is visible but hidden from public view.
 
 **Students:**
 
