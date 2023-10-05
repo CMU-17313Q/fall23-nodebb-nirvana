@@ -23,6 +23,7 @@ get:
                 $ref: ../../components/schemas/Status.yaml#/Status
               response:
                 type: object
+                additionalProperties: true
                 properties:
                   pid:
                     type: number
