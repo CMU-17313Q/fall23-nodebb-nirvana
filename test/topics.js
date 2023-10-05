@@ -81,7 +81,6 @@ describe('Topic\'s', () => {
             });
         });
 
-        
         it('should create a public post by default', (done) => {
             topics.post({
                 uid: topic.userId,
