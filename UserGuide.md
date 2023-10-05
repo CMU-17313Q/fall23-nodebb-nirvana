@@ -16,7 +16,7 @@ Users need to log in to their NodeBB account.
 
 #### Posting as Anonymous
 
-When creating a new post or replying to a thread, there is an option to post anonymously. This option can be a checkbox in the post creation interface.
+When creating a new post or replying to a thread, there is an option to post anonymously. This option is a checkbox in the post creation interface.
 
 #### Posting Content
 
