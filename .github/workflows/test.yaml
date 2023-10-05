@@ -33,8 +33,8 @@ jobs:
             node: 16
             coverage: true
           # test under development once
-          - database: mongo-dev
-            test_env: development
+          - database: redis
+            test_env: production
     runs-on: ${{ matrix.os }}
     env:
       TEST_ENV: ${{ matrix.test_env || 'production' }}
