@@ -25,6 +25,7 @@ const socketUser = require('../src/socket.io/user');
 const apiUser = require('../src/api/users');
 const utils = require('../src/utils');
 const privileges = require('../src/privileges');
+const { isInstructor, isStudent } = require('../src/privileges/users');
 
 describe('User', () => {
     let userData;
@@ -172,6 +173,44 @@ describe('User', () => {
             ]);
             assert.strictEqual(err.message, '[[error:email-taken]]');
         });
+    });
+
+    it('should create a instructor properly', async () => {
+        const instructorUid = await User.create({
+            username: 'instructor',
+            fullname: 'instructor fullname',
+            email: 'instructorEmail@email.com',
+            password: 'instructorpass',
+            accounttype: 'instructor',
+        });
+        assert.ok(instructorUid);
+        assert.equal(await isInstructor(instructorUid), true);
+        assert.equal(await isStudent(instructorUid), false);
+    });
+
+    it('should create a student properly', async () => {
+        const studentUid = await User.create({
+            username: 'student',
+            fullname: 'student fullname',
+            email: 'studentEmail@email.com',
+            password: 'studentpass',
+            accountType: 'student',
+        });
+        assert.ok(studentUid);
+        assert.equal(await isInstructor(studentUid), false);
+        assert.equal(await isStudent(studentUid), true);
+    });
+
+    it('should register as a student by default', async () => {
+        const uid = await User.create({
+            username: 'some user',
+            fullname: 'some user fullname',
+            email: 'someemail@email.com',
+            password: 'somepassword123',
+        });
+        assert.ok(uid);
+        assert.equal(await isInstructor(uid), false);
+        assert.equal(await isStudent(uid), true);
     });
 
     describe('.uniqueUsername()', () => {
