@@ -23,6 +23,7 @@ get:
                 $ref: ../../components/schemas/Status.yaml#/Status
               response:
                 type: object
+                additionalProperties: true
                 properties:
                   pid:
                     type: number
@@ -36,8 +37,6 @@ get:
                     type: string
                   timestamp:
                     type: number
-                  postType:
-                    type: string
                   flagId:
                     type: number
                   deleted:
