@@ -111,6 +111,20 @@ describe('Topic\'s', () => {
             });
         });
 
+        it('should create a new private topic with proper parameters', (done) => {
+            topics.post({
+                uid: topic.userId,
+                title: topic.title,
+                content: topic.content,
+                cid: topic.categoryId,
+                postType: 'private',
+            }, (err, result) => {
+                assert.ifError(err);
+                assert(result);
+                assert.equal(result.topicData.postType, 'private');
+                done();
+            });
+        });
 
         it('should get post count', (done) => {
             socketTopics.postcount({ uid: adminUid }, topic.tid, (err, count) => {
@@ -372,6 +386,48 @@ describe('Topic\'s', () => {
             assert.strictEqual(replies.length, 0);
             toPid = await posts.getPostField(reply2.pid, 'toPid');
             assert.strictEqual(toPid, null);
+        });
+    });
+
+    describe('Private Posts Test', () => {
+        it('should not filter out public posts for a student', async () => {
+            const keepTopic = privileges.topics.privatePostFiltering({
+                postType: 'public',
+                uid: 1,
+            }, 4, false);
+            assert(keepTopic);
+        });
+
+        it('should not filter out anon posts for a other', async () => {
+            const keepTopic = privileges.topics.privatePostFiltering({
+                postType: 'anon',
+                uid: 1,
+            }, 4, false);
+            assert(keepTopic);
+        });
+
+        it('should filter out private posts for a other student', async () => {
+            const keepTopic = privileges.topics.privatePostFiltering({
+                postType: 'private',
+                uid: 1,
+            }, 4, false);
+            assert(!keepTopic);
+        });
+
+        it('should not filter out private posts for a author', async () => {
+            const keepTopic = privileges.topics.privatePostFiltering({
+                postType: 'private',
+                uid: 1,
+            }, 1, false);
+            assert(keepTopic);
+        });
+
+        it('should not filter out private posts for an instructor', async () => {
+            const keepTopic = privileges.topics.privatePostFiltering({
+                postType: 'private',
+                uid: 1,
+            }, 5, true);
+            assert(keepTopic);
         });
     });
 
