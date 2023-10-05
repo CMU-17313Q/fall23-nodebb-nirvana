@@ -481,7 +481,6 @@ describe('Topic\'s', () => {
             });
         });
 
-
         it('should not receive errors', (done) => {
             topics.getTopicData(newTopic.tid, (err, topicData) => {
                 assert.ifError(err);
