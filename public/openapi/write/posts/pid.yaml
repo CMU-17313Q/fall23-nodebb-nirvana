@@ -2,7 +2,7 @@ get:
   tags:
     - posts
   summary: get a post
-  description: This operation retrieves a post's data
+  description: This operation retrieves a post's data with additional properties
   parameters:
     - in: path
       name: pid
