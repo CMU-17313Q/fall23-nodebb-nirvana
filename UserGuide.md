@@ -24,7 +24,7 @@ Users can write their post or reply as they normally would but with the anonymit
 
 #### Submitting the Post
 
-After composing the post, the user should click the "Submit" or "Post" button to publish it anonymously.
+After composing the post, the user should click the "Submit" button to publish it anonymously.
 
 #### After Submission
 
@@ -44,15 +44,15 @@ Users need to log in to their NodeBB account.
 
 #### Posting Privately for Instructors
 
-When creating a new post or replying to a thread, there is an option to post privately for instructors. This option can be a checkbox in the post creation interface, labeled as "Post Privately for Instructors."
+When creating a new post or replying to a thread, there is an option to post privately for instructors. This option is a checkbox in the post creation interface, labeled as "Post Privately"
 
 #### Posting Content
 
-Users can write their post or reply as they normally would, with the "Post Privately for Instructors" option enabled.
+Users can write their post or reply as they normally would, with the "Post Privately" option enabled.
 
 #### Submitting the Post
 
-After composing the post, the user should click the "Submit" or "Post" button to publish it privately for instructors.
+After composing the post, the user should click the "Submit" button to publish it privately for instructors.
 
 #### Viewing the Post
 
@@ -84,6 +84,8 @@ Automated testing is crucial for ensuring the reliability of these features. It 
 
 ## Manual Testing by the Team
 
+Manual testing was also conducted by all team members following the steps below to ensure full functionalit of previous version of NodeBB and the implementation of the new features. 
+
 ### Scenario-based Testing
 
 #### For Anonymous Posting
@@ -107,7 +109,7 @@ Automated testing is crucial for ensuring the reliability of these features. It 
 **Instructors and Students:**
 
 1. Log in with their respective accounts.
-2. Enable the "Post Privately for Instructors" option.
+2. Enable the "Post Privately" option.
 3. Create test posts.
 4. Verify that these posts are visible to the instructor with the user's name.
 5. Confirm that other students or users cannot access or view these private posts.
