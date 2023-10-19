@@ -36,5 +36,5 @@ json_data=$(jq --arg password "$REDIS_PASSWORD" '.redis.password = $password' <<
 
 # Write the updated JSON file to config.json
 echo "$json_data" > "/usr/src/app/config.json"
-
+# Print it to the logs
 cat /usr/src/app/config.json
