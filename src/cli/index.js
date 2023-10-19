@@ -98,8 +98,7 @@ prestart.versionCheck();
 
 if (!configExists && process.argv[2] !== 'setup') {
     require('./setup').webInstall();
-    return;
-}
+} else {
 
 process.env.CONFIG = configFile;
 
@@ -316,7 +315,7 @@ program
 if (process.argv.length === 2) {
     program.help();
 }
-
+}
 program.executables = false;
 
 program.parse();
