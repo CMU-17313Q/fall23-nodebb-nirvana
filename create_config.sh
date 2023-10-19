@@ -1,27 +1,40 @@
-FROM node:lts
+#!/bin/bash
 
-RUN mkdir -p /usr/src/app && \
-    chown -R node:node /usr/src/app
-WORKDIR /usr/src/app
+# Check that environment variables have been defined
+if [[ -z "${REDIS_HOST+x}" ]]; then
+  # var is not defined
+  echo "Error: REDIS_HOST is not defined!"
+  exit 1
+fi
 
-RUN apt-get update && apt-get install -y jq
+if [[ -z "${REDIS_PORT+x}" ]]; then
+  # var is not defined
+  echo "Error: REDIS_PORT is not defined!"
+  exit 1
+fi
 
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
+if [[ -z "${REDIS_PASSWORD+x}" ]]; then
+  # var is not defined
+  echo "Error: REDIS_PASSWORD is not defined!"
+  exit 1
+fi
 
-COPY --chown=node:node install/package.json /usr/src/app/package.json
+if [[ -z "${DEPLOYMENT_URL+x}" ]]; then
+  # var is not defined
+  echo "Error: DEPLOYMENT_URL is not defined!"
+  exit 1
+fi
 
-USER node
+# Read the JSON file
+json_data=$(cat "/usr/src/app/config_template.json")
 
-RUN npm install && \
-    npm cache clean --force
+# Update the JSON file with the environment variables
+json_data=$(jq --arg deployment_url "$DEPLOYMENT_URL" '.url = $deployment_url' <<< "$json_data")
+json_data=$(jq --arg host "$REDIS_HOST" '.redis.host = $host' <<< "$json_data")
+json_data=$(jq --arg port "$REDIS_PORT" '.redis.port = $port' <<< "$json_data")
+json_data=$(jq --arg password "$REDIS_PASSWORD" '.redis.password = $password' <<< "$json_data")
 
-COPY --chown=node:node . /usr/src/app
+# Write the updated JSON file to config.json
+echo "$json_data" > "/usr/src/app/config.json"
 
-ENV NODE_ENV=production \
-    daemon=false \
-    silent=false
-
-EXPOSE 4567
-
-CMD  ./create_config.sh -n "${SETUP}" && ./nodebb setup || node ./nodebb build; node ./nodebb start
+cat /usr/src/app/config.json
