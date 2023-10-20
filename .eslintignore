@@ -19,6 +19,7 @@ logs/
 test/files
 *.min.js
 
+report/
 /public/src/app.js
 /public/src/client.js
 /public/src/admin/admin.js
