@@ -202,5 +202,14 @@
             "email": "baris@nodebb.org",
             "url": "https://github.com/barisusakli"
         }
-    ]
+    ],
+    "standard": {
+        "globals": [
+            "mocha",
+            "it",
+            "describe",
+            "before",
+            "after"
+        ]
+    }
 }
