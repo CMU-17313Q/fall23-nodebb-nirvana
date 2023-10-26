@@ -1014,20 +1014,20 @@ describe('Controllers', () => {
   describe('revoke session', () => {
     let uid
     let jar
-    let csrf_token
+    let csrfToken
 
     before(async () => {
       uid = await user.create({ username: 'revokeme', password: 'barbar' })
       const login = await helpers.loginUser('revokeme', 'barbar')
       jar = login.jar
-      csrf_token = login.csrf_token
+      csrfToken = login.csrf_token
     })
 
     it('should fail to revoke session with missing uuid', (done) => {
       request.del(`${nconf.get('url')}/api/user/revokeme/session`, {
         jar,
         headers: {
-          'x-csrf-token': csrf_token
+          'x-csrf-token': csrfToken
         }
       }, (err, res) => {
         assert.ifError(err)

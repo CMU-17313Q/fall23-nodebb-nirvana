@@ -875,7 +875,7 @@ describe('User', () => {
   describe('profile methods', () => {
     let uid
     let jar
-    let csrf_token
+    let csrfToken
 
     before(async () => {
       const newUid = await User.create({ username: 'updateprofile', email: 'update@me.com', password: '123456' })
@@ -884,7 +884,7 @@ describe('User', () => {
       await User.setUserField(uid, 'email', 'update@me.com')
       await User.email.confirmByUid(uid);
 
-      ({ jar, csrf_token } = await helpers.loginUser('updateprofile', '123456'))
+      ({ jar, csrf_token: csrfToken } = await helpers.loginUser('updateprofile', '123456'))
     })
 
     it('should return error if not logged in', async () => {
@@ -1350,7 +1350,7 @@ describe('User', () => {
 
       // Accessing this page will mark the user's account as needing an updated email, below code undo's.
       await requestAsync({
-        uri: `${nconf.get('url')}/register/abort?_csrf=${csrf_token}`,
+        uri: `${nconf.get('url')}/register/abort?_csrf=${csrfToken}`,
         jar,
         method: 'POST',
         simple: false
@@ -2208,7 +2208,7 @@ describe('User', () => {
     })
 
     describe('when inviter is not an admin and does not have invite privilege', () => {
-      let csrf_token
+      let csrfToken
       let jar
 
       before((done) => {
@@ -2222,20 +2222,20 @@ describe('User', () => {
             jar
           }, (err, response, body) => {
             assert.ifError(err)
-            csrf_token = body.csrf_token
+            csrfToken = body.csrf_token
             done()
           })
         })
       })
 
       it('should error if user does not have invite privilege', async () => {
-        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, notAnInviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, notAnInviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
       })
 
       it('should error out if user tries to use an inviter\'s uid via the API', async () => {
-        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         const numInvites = await User.getInvitesNumber(inviterUid)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
@@ -2244,7 +2244,7 @@ describe('User', () => {
     })
 
     describe('when inviter has invite privilege', () => {
-      let csrf_token
+      let csrfToken
       let jar
 
       before((done) => {
@@ -2258,78 +2258,78 @@ describe('User', () => {
             jar
           }, (err, response, body) => {
             assert.ifError(err)
-            csrf_token = body.csrf_token
+            csrfToken = body.csrf_token
             done()
           })
         })
       })
 
       it('should error with invalid data', async () => {
-        const { res } = await helpers.invite({}, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({}, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 400)
         assert.strictEqual(res.body.status.message, 'Invalid Data')
       })
 
       it('should error if user is not admin and type is admin-invite-only', async () => {
         meta.config.registrationType = 'admin-invite-only'
-        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
       })
 
       it('should send invitation email (without groups to be joined)', async () => {
         meta.config.registrationType = 'normal'
-        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite1@test.com', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
 
       it('should send multiple invitation emails (with a public group to be joined)', async () => {
-        const { res } = await helpers.invite({ emails: 'invite2@test.com,invite3@test.com', groupsToJoin: [PUBLIC_GROUP] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite2@test.com,invite3@test.com', groupsToJoin: [PUBLIC_GROUP] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
 
       it('should error if the user has not permission to invite to the group', async () => {
-        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: [PRIVATE_GROUP] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: [PRIVATE_GROUP] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
       })
 
       it('should error if a non-admin tries to invite to the administrators group', async () => {
-        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: ['administrators'] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: ['administrators'] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
       })
 
       it('should to invite to own private group', async () => {
-        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: [OWN_PRIVATE_GROUP] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite4@test.com', groupsToJoin: [OWN_PRIVATE_GROUP] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
 
       it('should to invite to multiple groups', async () => {
-        const { res } = await helpers.invite({ emails: 'invite5@test.com', groupsToJoin: [PUBLIC_GROUP, OWN_PRIVATE_GROUP] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite5@test.com', groupsToJoin: [PUBLIC_GROUP, OWN_PRIVATE_GROUP] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
 
       it('should error if tries to invite to hidden group', async () => {
-        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [HIDDEN_GROUP] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [HIDDEN_GROUP] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
       })
 
       it('should error if ouf of invitations', async () => {
         meta.config.maximumInvites = 1
-        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, `You have invited the maximum amount of people (${5} out of ${1}).`)
         meta.config.maximumInvites = 10
       })
 
       it('should send invitation email after maximumInvites increased', async () => {
-        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite6@test.com', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
 
       it('should error if invite is sent via API with a different UID', async () => {
-        const { res } = await helpers.invite({ emails: 'inviter@nodebb.org', groupsToJoin: [] }, adminUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'inviter@nodebb.org', groupsToJoin: [] }, adminUid, jar, csrfToken)
         const numInvites = await User.getInvitesNumber(adminUid)
         assert.strictEqual(res.statusCode, 403)
         assert.strictEqual(res.body.status.message, 'You do not have enough privileges for this action.')
@@ -2337,7 +2337,7 @@ describe('User', () => {
       })
 
       it('should succeed if email exists but not actually send an invite', async () => {
-        const { res } = await helpers.invite({ emails: 'inviter@nodebb.org', groupsToJoin: [] }, inviterUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'inviter@nodebb.org', groupsToJoin: [] }, inviterUid, jar, csrfToken)
         const numInvites = await User.getInvitesNumber(adminUid)
 
         assert.strictEqual(res.statusCode, 200)
@@ -2346,7 +2346,7 @@ describe('User', () => {
     })
 
     describe('when inviter is an admin', () => {
-      let csrf_token
+      let csrfToken
       let jar
 
       before((done) => {
@@ -2360,21 +2360,21 @@ describe('User', () => {
             jar
           }, (err, response, body) => {
             assert.ifError(err)
-            csrf_token = body.csrf_token
+            csrfToken = body.csrf_token
             done()
           })
         })
       })
 
       it('should escape email', async () => {
-        await helpers.invite({ emails: '<script>alert("ok");</script>', groupsToJoin: [] }, adminUid, jar, csrf_token)
+        await helpers.invite({ emails: '<script>alert("ok");</script>', groupsToJoin: [] }, adminUid, jar, csrfToken)
         const data = await User.getInvites(adminUid)
         assert.strictEqual(data[0], '&lt;script&gt;alert(&quot;ok&quot;);&lt;&#x2F;script&gt;')
         await User.deleteInvitationKey('<script>alert("ok");</script>')
       })
 
       it('should invite to the administrators group if inviter is an admin', async () => {
-        const { res } = await helpers.invite({ emails: 'invite99@test.com', groupsToJoin: ['administrators'] }, adminUid, jar, csrf_token)
+        const { res } = await helpers.invite({ emails: 'invite99@test.com', groupsToJoin: ['administrators'] }, adminUid, jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
       })
     })
