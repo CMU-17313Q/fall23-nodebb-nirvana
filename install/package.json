@@ -209,7 +209,9 @@
             "it",
             "describe",
             "before",
-            "after"
+            "after",
+            "beforeEach",
+            "afterEach"
         ]
     }
 }
