@@ -5,10 +5,8 @@ const async = require('async')
 const request = require('request')
 const nconf = require('nconf')
 
-const db = require('./mocks/databasemock')
 const topics = require('../src/topics')
 const categories = require('../src/categories')
-const groups = require('../src/groups')
 const user = require('../src/user')
 const meta = require('../src/meta')
 const privileges = require('../src/privileges')
@@ -16,7 +14,6 @@ const helpers = require('./helpers')
 
 describe('feeds', () => {
   let tid
-  let pid
   let fooUid
   let cid
   before((done) => {
@@ -40,7 +37,6 @@ describe('feeds', () => {
 
       topics.post({ uid: results.user, title: 'test topic title', content: 'test topic content', cid: results.category.cid }, (err, result) => {
         tid = result.topicData.tid
-        pid = result.postData.pid
         done(err)
       })
     })

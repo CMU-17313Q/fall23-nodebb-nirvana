@@ -6,7 +6,6 @@ const assert = require('assert')
 const shim = require('../src/translator')
 
 const { Translator } = shim
-const db = require('./mocks/databasemock')
 
 describe('Translator shim', () => {
   describe('.translate()', () => {
@@ -281,7 +280,7 @@ describe('Translator modules', () => {
       assert.ok(lang)
     })
 
-    const translator = Translator.create('fr_FR')
+    Translator.create('fr_FR')
     done()
   })
 })

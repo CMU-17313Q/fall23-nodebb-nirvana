@@ -7,7 +7,6 @@ const path = require('path')
 const fs = require('fs').promises
 const request = require('request')
 const requestAsync = require('request-promise-native')
-const util = require('util')
 
 const db = require('./mocks/databasemock')
 const categories = require('../src/categories')
@@ -30,12 +29,9 @@ const emptyUploadsFolder = async () => {
 }
 
 describe('Upload Controllers', () => {
-  let tid
   let cid
-  let pid
   let adminUid
   let regularUid
-  let maliciousUid
 
   before((done) => {
     async.series({
@@ -60,15 +56,12 @@ describe('Upload Controllers', () => {
       }
       adminUid = results.adminUid
       regularUid = results.regularUid
-      maliciousUid = results.maliciousUid
       cid = results.category.cid
 
       topics.post({ uid: adminUid, title: 'test topic title', content: 'test topic content', cid: results.category.cid }, (err, result) => {
         if (err) {
           return done(err)
         }
-        tid = result.topicData.tid
-        pid = result.postData.pid
         groups.join('administrators', adminUid, done)
       })
     })

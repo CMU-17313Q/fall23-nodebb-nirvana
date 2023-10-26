@@ -9,7 +9,6 @@ const meta = require('../src/meta')
 const user = require('../src/user')
 const topics = require('../src/topics')
 const categories = require('../src/categories')
-const groups = require('../src/groups')
 const notifications = require('../src/notifications')
 const socketNotifications = require('../src/socket.io/notifications')
 

@@ -611,7 +611,6 @@ describe('User', () => {
     })
 
     it('should delete user even if they started a chat', async () => {
-      const socketModules = require('../src/socket.io/modules')
       const uid1 = await User.create({ username: 'chatuserdelete1' })
       const uid2 = await User.create({ username: 'chatuserdelete2' })
       const roomId = await messaging.newRoom(uid1, [uid2])
@@ -2499,7 +2498,6 @@ describe('User', () => {
     })
 
     describe('invite groups', () => {
-      let csrf_token
       let jar
 
       before((done) => {
@@ -2513,7 +2511,6 @@ describe('User', () => {
             jar
           }, (err, response, body) => {
             assert.ifError(err)
-            csrf_token = body.csrf_token
             done()
           })
         })

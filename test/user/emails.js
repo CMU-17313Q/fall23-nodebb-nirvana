@@ -1,7 +1,6 @@
 'use strict'
 
 const assert = require('assert')
-const nconf = require('nconf')
 const util = require('util')
 
 const db = require('../mocks/databasemock')
@@ -172,7 +171,7 @@ describe('email confirmation (v3 api)', () => {
   })
 
   it('should have a pending validation', async () => {
-    const code = await db.get(`confirm:byUid:${userObj.uid}`)
+    await db.get(`confirm:byUid:${userObj.uid}`)
     assert.strictEqual(await user.email.isValidationPending(userObj.uid, 'test@example.org'), true)
   })
 
@@ -197,7 +196,7 @@ describe('email confirmation (v3 api)', () => {
 
   it('should not confirm an email that is not pending or set', async () => {
     await groups.join('administrators', userObj.uid)
-    const { res, body } = await helpers.request('post', `/api/v3/users/${userObj.uid}/emails/${encodeURIComponent('fake@example.org')}/confirm`, {
+    const { res } = await helpers.request('post', `/api/v3/users/${userObj.uid}/emails/${encodeURIComponent('fake@example.org')}/confirm`, {
       jar,
       json: true
     })

@@ -3,7 +3,6 @@
 const assert = require('assert')
 const nconf = require('nconf')
 
-const db = require('./mocks/databasemock')
 const coverPhoto = require('../src/coverPhoto')
 const meta = require('../src/meta')
 

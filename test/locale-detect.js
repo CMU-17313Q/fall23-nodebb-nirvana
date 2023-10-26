@@ -4,7 +4,6 @@ const assert = require('assert')
 const nconf = require('nconf')
 const request = require('request')
 
-const db = require('./mocks/databasemock')
 const meta = require('../src/meta')
 
 describe('Language detection', () => {

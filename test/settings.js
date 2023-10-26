@@ -1,9 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const nconf = require('nconf')
 
-const db = require('./mocks/databasemock')
 const settings = require('../src/settings')
 
 describe('settings v3', () => {

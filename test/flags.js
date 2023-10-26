@@ -2,7 +2,6 @@
 
 const assert = require('assert')
 const nconf = require('nconf')
-const async = require('async')
 const request = require('request-promise-native')
 const util = require('util')
 

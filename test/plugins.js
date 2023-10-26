@@ -6,7 +6,6 @@ const nconf = require('nconf')
 const request = require('request')
 const fs = require('fs')
 
-const db = require('./mocks/databasemock')
 const plugins = require('../src/plugins')
 
 describe('Plugins', () => {

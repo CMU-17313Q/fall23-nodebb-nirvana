@@ -5,7 +5,6 @@ const assert = require('assert')
 const fs = require('fs')
 const path = require('path')
 
-const db = require('./mocks/databasemock')
 const Plugins = require('../src/plugins')
 const Emailer = require('../src/emailer')
 const user = require('../src/user')

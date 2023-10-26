@@ -12,8 +12,6 @@ const Groups = require('../src/groups')
 
 describe('meta', () => {
   let fooUid
-  let bazUid
-  let herpUid
 
   before((done) => {
     Groups.cache.reset()
@@ -28,8 +26,6 @@ describe('meta', () => {
       }
 
       fooUid = uids[0]
-      bazUid = uids[1]
-      herpUid = uids[2]
 
       Groups.join('administrators', fooUid, done)
     })

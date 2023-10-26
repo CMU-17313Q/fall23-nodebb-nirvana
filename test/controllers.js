@@ -1150,7 +1150,6 @@ describe('Controllers', () => {
   })
 
   describe('tags', () => {
-    let tid
     before((done) => {
       topics.post({
         uid: fooUid,
@@ -1160,7 +1159,6 @@ describe('Controllers', () => {
         tags: ['nodebb', 'bug', 'test']
       }, (err, result) => {
         assert.ifError(err)
-        tid = result.topicData.tid
         done()
       })
     })
@@ -2293,7 +2291,6 @@ describe('Controllers', () => {
 
     it('should get recent topic replies from children categories', (done) => {
       let parentCategory
-      let childCategory1
       let childCategory2
 
       async.waterfall([
@@ -2307,7 +2304,6 @@ describe('Controllers', () => {
               categories.create({ name: 'child category 1', parentCid: category.cid }, next)
             },
             function (category, next) {
-              childCategory1 = category
               categories.create({ name: 'child category 2', parentCid: parentCategory.cid }, next)
             },
             function (category, next) {

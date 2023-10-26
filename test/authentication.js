@@ -5,7 +5,6 @@ const url = require('url')
 const async = require('async')
 const nconf = require('nconf')
 const request = require('request')
-const util = require('util')
 
 const db = require('./mocks/databasemock')
 const user = require('../src/user')
@@ -37,7 +36,7 @@ describe('authentication', () => {
   it('second user should fail to login with email since email is not confirmed', async () => {
     const oldValue = meta.config.allowLoginWith
     meta.config.allowLoginWith = 'username-email'
-    const uid = await user.create({ username: '2nduser', password: '2ndpassword', email: '2nduser@nodebb.org' })
+    await user.create({ username: '2nduser', password: '2ndpassword', email: '2nduser@nodebb.org' })
     const { res, body } = await helpers.loginUser('2nduser@nodebb.org', '2ndpassword')
     assert.strictEqual(res.statusCode, 403)
     assert.strictEqual(body, '[[error:invalid-login-credentials]]')

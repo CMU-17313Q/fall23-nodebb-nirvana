@@ -1,9 +1,7 @@
 'use strict'
 
-const async = require('async')
 const assert = require('assert')
 
-const db = require('./mocks/databasemock')
 const groups = require('../src/groups')
 const user = require('../src/user')
 const blacklist = require('../src/meta/blacklist')

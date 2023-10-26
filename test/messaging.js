@@ -1,7 +1,6 @@
 'use strict'
 
 const assert = require('assert')
-const async = require('async')
 const request = require('request-promise-native')
 const nconf = require('nconf')
 const util = require('util')
@@ -359,7 +358,6 @@ describe('Messaging Library', () => {
     })
 
     it('should fail to send second message due to rate limit', async () => {
-      const socketMock = { uid: mocks.users.foo.uid }
       const oldValue = meta.config.chatMessageDelay
       meta.config.chatMessageDelay = 1000
 

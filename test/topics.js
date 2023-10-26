@@ -1279,7 +1279,7 @@ describe('Topic\'s', () => {
       const result = await topics.post({ uid: fooUid, cid: categoryObj.cid, title: 'fork vote test', content: 'main post' })
       const reply1 = await topics.reply({ tid: result.topicData.tid, uid: fooUid, content: 'test reply 1' })
       const reply2 = await topics.reply({ tid: result.topicData.tid, uid: fooUid, content: 'test reply 2' })
-      const reply3 = await topics.reply({ tid: result.topicData.tid, uid: fooUid, content: 'test reply 3' })
+      await topics.reply({ tid: result.topicData.tid, uid: fooUid, content: 'test reply 3' })
       await posts.upvote(result.postData.pid, adminUid)
       await posts.upvote(reply1.pid, adminUid)
       assert.strictEqual(await db.sortedSetScore('topics:votes', result.topicData.tid), 1)
@@ -1544,7 +1544,6 @@ describe('Topic\'s', () => {
   describe('unread', () => {
     const socketTopics = require('../src/socket.io/topics')
     let tid
-    let mainPid
     let uid
     before((done) => {
       async.parallel({
@@ -1557,7 +1556,6 @@ describe('Topic\'s', () => {
       }, (err, results) => {
         assert.ifError(err)
         tid = results.topic.topicData.tid
-        mainPid = results.topic.postData.pid
         uid = results.joeUid
         done()
       })
@@ -1615,7 +1613,7 @@ describe('Topic\'s', () => {
 
     it('should mark topic notifications read', async () => {
       await apiTopics.follow({ uid: adminUid }, { tid })
-      const data = await topics.reply({ uid, timestamp: Date.now(), content: 'some content', tid })
+      await topics.reply({ uid, timestamp: Date.now(), content: 'some content', tid })
       await sleep(2500)
       let count = await User.notifications.getUnreadCount(adminUid)
       assert.strictEqual(count, 1)
@@ -1953,9 +1951,9 @@ describe('Topic\'s', () => {
     })
 
     it('should rename tags', async () => {
-      const result1 = await topics.post({ uid: adminUid, tags: ['plugins'], title: 'topic tagged with plugins', content: 'topic 1 content', cid: topic.categoryId })
+      await topics.post({ uid: adminUid, tags: ['plugins'], title: 'topic tagged with plugins', content: 'topic 1 content', cid: topic.categoryId })
       const result2 = await topics.post({ uid: adminUid, tags: ['plugin'], title: 'topic tagged with plugin', content: 'topic 2 content', cid: topic.categoryId })
-      const data1 = await topics.getTopicData(result2.topicData.tid)
+      await topics.getTopicData(result2.topicData.tid)
 
       await socketAdmin.tags.rename({ uid: adminUid }, [{
         value: 'plugin',
@@ -1966,7 +1964,7 @@ describe('Topic\'s', () => {
       assert.strictEqual(tids.length, 2)
       const tags = await topics.getTopicTags(result2.topicData.tid)
 
-      const data = await topics.getTopicData(result2.topicData.tid)
+      await topics.getTopicData(result2.topicData.tid)
       assert.strictEqual(tags.length, 1)
       assert.strictEqual(tags[0], 'plugins')
     })
@@ -2854,7 +2852,7 @@ describe('Topic\'s', () => {
     it('should able to reschedule', async () => {
       const newDate = new Date(Date.now() + (5 * 86400000)).getTime()
       const editData = { ...adminApiOpts, form: { ...topic, pid: topicData.mainPid, timestamp: newDate } }
-      const response = await requestType('put', `${nconf.get('url')}/api/v3/posts/${topicData.mainPid}`, editData)
+      await requestType('put', `${nconf.get('url')}/api/v3/posts/${topicData.mainPid}`, editData)
 
       const editedTopic = await topics.getTopicFields(topicData.tid, ['lastposttime', 'timestamp'])
       const editedPost = await posts.getPostFields(postData.pid, ['timestamp'])

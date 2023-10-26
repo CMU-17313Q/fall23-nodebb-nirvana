@@ -5,7 +5,6 @@ const async = require('async')
 const request = require('request')
 const nconf = require('nconf')
 
-const db = require('./mocks/databasemock')
 const topics = require('../src/topics')
 const categories = require('../src/categories')
 const user = require('../src/user')
@@ -16,11 +15,8 @@ describe('Search', () => {
   let phoebeUid
   let gingerUid
 
-  let topic1Data
   let topic2Data
   let post1Data
-  let post2Data
-  let post3Data
   let cid1
   let cid2
   let cid3
@@ -74,7 +70,6 @@ describe('Search', () => {
             }, next)
           },
           function (results, next) {
-            topic1Data = results.topicData
             post1Data = results.postData
 
             topics.post({
@@ -87,7 +82,6 @@ describe('Search', () => {
           },
           function (results, next) {
             topic2Data = results.topicData
-            post2Data = results.postData
             topics.reply({
               uid: phoebeUid,
               content: 'reply post apple',
@@ -104,7 +98,6 @@ describe('Search', () => {
   })
 
   it('should search term in titles and posts', (done) => {
-    const meta = require('../src/meta')
     const qs = `/api/search?term=cucumber&in=titlesposts&categories[]=${cid1}&by=phoebe&replies=1&repliesFilter=atleast&sortBy=timestamp&sortDirection=desc&showAs=posts`
     privileges.global.give(['groups:search:content'], 'guests', (err) => {
       assert.ifError(err)

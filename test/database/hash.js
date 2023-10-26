@@ -136,7 +136,6 @@ describe('Hash methods', () => {
     })
 
     it('should set two objects fields to same data', async () => {
-      const data = { foo: 'baz', test: '1' }
       await db.setObjectField(['multiObject1', 'multiObject2'], 'myField', '2')
       const result = await db.getObjects(['multiObject1', 'multiObject2'])
       assert.deepStrictEqual(result[0].myField, '2')

@@ -519,7 +519,6 @@ describe('Categories', () => {
     })
 
     it('should create category with settings from', (done) => {
-      let child1Cid
       let parentCid
       async.waterfall([
         function (next) {
@@ -530,7 +529,6 @@ describe('Categories', () => {
           Categories.create({ name: 'child1', description: 'will be gone', cloneFromCid: parentCid }, next)
         },
         function (category, next) {
-          child1Cid = category.cid
           assert.equal(category.description, 'copy me')
           next()
         }

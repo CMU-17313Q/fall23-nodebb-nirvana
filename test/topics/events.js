@@ -15,7 +15,7 @@ describe('Topic Events', () => {
   before(async () => {
     fooUid = await user.create({ username: 'foo', password: '123456' })
 
-    const categoryObj = await categories.create({
+    await categories.create({
       name: 'Test Category',
       description: 'Test category created by testing script'
     })

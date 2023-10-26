@@ -26,8 +26,6 @@ const socketAdmin = require('../src/socket.io/admin')
 
 describe('socket.io', () => {
   let io
-  let cid
-  let tid
   let adminUid
   let regularUid
 
@@ -46,8 +44,6 @@ describe('socket.io', () => {
     regularUid = data[1]
     await user.setUserField(regularUid, 'email', 'regular@test.com')
     await user.email.confirmByUid(regularUid)
-
-    cid = data[2].cid
   })
 
   it('should connect and auth properly', (done) => {

@@ -3,7 +3,6 @@
 const assert = require('assert')
 const nconf = require('nconf')
 const request = require('request-promise-native')
-const db = require('./mocks/databasemock')
 
 const user = require('../src/user')
 const groups = require('../src/groups')

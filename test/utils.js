@@ -3,7 +3,6 @@
 const assert = require('assert')
 const { JSDOM } = require('jsdom')
 const slugify = require('../src/slugify')
-const db = require('./mocks/databasemock')
 
 describe('Utility Methods', () => {
   // https://gist.github.com/robballou/9ee108758dc5e0e2d028

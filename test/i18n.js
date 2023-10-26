@@ -8,8 +8,6 @@ const fs = require('fs')
 
 const file = require('../src/file')
 
-const db = require('./mocks/databasemock')
-
 describe('i18n', () => {
   let folders
 

@@ -3,15 +3,11 @@
 const assert = require('assert')
 const async = require('async')
 
-const db = require('./mocks/databasemock')
-const meta = require('../src/meta')
 const User = require('../src/user')
 const Groups = require('../src/groups')
 
 describe('rewards', () => {
   let adminUid
-  let bazUid
-  let herpUid
 
   before((done) => {
     // Create 3 users: 1 admin, 2 regular
@@ -25,8 +21,6 @@ describe('rewards', () => {
       }
 
       adminUid = uids[0]
-      bazUid = uids[1]
-      herpUid = uids[2]
 
       async.series([
         function (next) {

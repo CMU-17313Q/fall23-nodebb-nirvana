@@ -5,7 +5,6 @@ const assert = require('assert')
 const nconf = require('nconf')
 const request = require('request')
 
-const db = require('./mocks/databasemock')
 const categories = require('../src/categories')
 const topics = require('../src/topics')
 const user = require('../src/user')
@@ -14,7 +13,6 @@ const helpers = require('./helpers')
 const meta = require('../src/meta')
 
 describe('Admin Controllers', () => {
-  let tid
   let cid
   let pid
   let regularPid
@@ -56,7 +54,6 @@ describe('Admin Controllers', () => {
 
       const adminPost = await topics.post({ uid: adminUid, title: 'test topic title', content: 'test topic content', cid: results.category.cid })
       assert.ifError(err)
-      tid = adminPost.topicData.tid
       pid = adminPost.postData.pid
 
       const regularPost = await topics.post({ uid: regular2Uid, title: 'regular user\'s test topic title', content: 'test topic content', cid: results.category.cid })
@@ -752,7 +749,7 @@ describe('Admin Controllers', () => {
     it('should return flag details', async () => {
       const oldValue = meta.config['min:rep:flag']
       meta.config['min:rep:flag'] = 0
-      const result = await helpers.request('post', '/api/v3/flags', {
+      await helpers.request('post', '/api/v3/flags', {
         json: true,
         jar: regularJar,
         form: {

@@ -396,13 +396,11 @@ describe('Post\'s', () => {
     }
 
     let tid
-    let mainPid
     let replyPid
 
     before(async () => {
       const [topicPostData, replyData] = await createTopicWithReply()
       tid = topicPostData.topicData.tid
-      mainPid = topicPostData.postData.pid
       replyPid = replyData.pid
       await privileges.categories.give(['groups:purge'], cid, 'registered-users')
     })
@@ -1237,7 +1235,7 @@ describe('Post\'s', () => {
       const result1 = await apiTopics.create({ uid: globalModUid }, { title: 'topic A', content: 'topic A content', cid })
       const result2 = await apiTopics.create({ uid: globalModUid }, { title: 'topic B', content: 'topic B content', cid })
 
-      const result = await apiTopics.reply({ uid }, { content: 'the moved queued post', tid: result1.tid })
+      await apiTopics.reply({ uid }, { content: 'the moved queued post', tid: result1.tid })
 
       await topics.merge([
         result1.tid, result2.tid

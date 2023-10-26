@@ -27,7 +27,6 @@ describe('Topic thumbs', () => {
   let adminCSRF
   let fooJar
   let fooCSRF
-  let fooUid
   const thumbPaths = [
         `${nconf.get('upload_path')}/files/test.png`,
         `${nconf.get('upload_path')}/files/test2.png`,
@@ -45,7 +44,7 @@ describe('Topic thumbs', () => {
     meta.config.allowTopicsThumbnail = 1
 
     adminUid = await user.create({ username: 'admin', password: '123456' })
-    fooUid = await user.create({ username: 'foo', password: '123456' })
+    await user.create({ username: 'foo', password: '123456' })
     await groups.join('administrators', adminUid)
     const adminLogin = await helpers.loginUser('admin', '123456')
     adminJar = adminLogin.jar

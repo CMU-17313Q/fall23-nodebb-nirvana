@@ -1049,11 +1049,11 @@ describe('Sorted Set methods', () => {
     })
 
     it('should increment the same field', async () => {
-      const data1 = await db.sortedSetIncrByBulk([
+      await db.sortedSetIncrByBulk([
         ['sortedIncrBulk5', 5, 'value5']
       ])
 
-      const data2 = await db.sortedSetIncrByBulk([
+      await db.sortedSetIncrByBulk([
         ['sortedIncrBulk5', 5, 'value5']
       ])
       assert.deepStrictEqual(
