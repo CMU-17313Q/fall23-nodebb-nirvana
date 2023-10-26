@@ -1,7 +1,6 @@
 'use strict'
 
 const assert = require('assert')
-const url = require('url')
 const async = require('async')
 const nconf = require('nconf')
 const request = require('request')
