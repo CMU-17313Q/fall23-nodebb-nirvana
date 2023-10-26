@@ -989,7 +989,7 @@ describe('Flags', () => {
     describe('access control', () => {
       let uid
       let jar
-      let csrf_token
+      let csrfToken
       let requests
 
       let flaggerUid
@@ -999,7 +999,7 @@ describe('Flags', () => {
 
       before(async () => {
         uid = await User.create({ username: 'flags-access-control', password: 'abcdef' });
-        ({ jar, csrf_token } = await helpers.loginUser('flags-access-control', 'abcdef'))
+        ({ jar, csrf_token: csrfToken } = await helpers.loginUser('flags-access-control', 'abcdef'))
 
         flaggerUid = await User.create({ username: 'flags-access-control-flagger', password: 'abcdef' })
       })
@@ -1024,7 +1024,7 @@ describe('Flags', () => {
             uri: `${nconf.get('url')}/api/v3/flags/${flagId}`,
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             },
             json: true,
             simple: false,
@@ -1035,7 +1035,7 @@ describe('Flags', () => {
             uri: `${nconf.get('url')}/api/v3/flags/${flagId}`,
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             },
             body: {
               state: 'wip'
@@ -1049,7 +1049,7 @@ describe('Flags', () => {
             uri: `${nconf.get('url')}/api/v3/flags/${flagId}/notes`,
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             },
             body: {
               note: 'test note',
@@ -1064,7 +1064,7 @@ describe('Flags', () => {
             uri: `${nconf.get('url')}/api/v3/flags/${flagId}/notes/${noteTime}`,
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             },
             json: true,
             simple: false,
@@ -1075,7 +1075,7 @@ describe('Flags', () => {
             uri: `${nconf.get('url')}/api/v3/flags/${flagId}`,
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             },
             json: true,
             simple: false,

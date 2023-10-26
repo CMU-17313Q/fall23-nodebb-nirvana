@@ -1,5 +1,3 @@
-'use strict'
-
 const assert = require('assert')
 const { JSDOM } = require('jsdom')
 const slugify = require('../src/slugify')
@@ -230,17 +228,25 @@ describe('Utility Methods', () => {
   })
 
   it('should return false if browser is not android', (done) => {
-    global.navigator = {
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'
-    }
+    Object.defineProperty(global, 'navigator', {
+      get () {
+        return {
+          userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'
+        }
+      }
+    })
     assert.equal(utils.isAndroidBrowser(), false)
     done()
   })
 
   it('should return true if browser is android', (done) => {
-    global.navigator = {
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Android /58.0.3029.96 Safari/537.36'
-    }
+    Object.defineProperty(global, 'navigator', {
+      get () {
+        return {
+          userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Android /58.0.3029.96 Safari/537.36'
+        }
+      }
+    })
     assert.equal(utils.isAndroidBrowser(), true)
     done()
   })
@@ -425,9 +431,12 @@ describe('Utility Methods', () => {
   })
 
   it('should profile function', (done) => {
-    const st = process.hrtime()
+    const st = process.hrtime.bigint()
     setTimeout(() => {
-      process.profile('it took', st)
+      const et = process.hrtime.bigint()
+      const elapsedNanoseconds = et - st
+      const elapsedMilliseconds = Number(elapsedNanoseconds) / 1_000_000
+      console.log(`It took ${elapsedMilliseconds} milliseconds.`)
       done()
     }, 500)
   })

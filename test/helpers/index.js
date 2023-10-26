@@ -23,15 +23,15 @@ helpers.getCsrfToken = async (jar) => {
 helpers.request = async function (method, uri, options) {
   const ignoreMethods = ['GET', 'HEAD', 'OPTIONS']
   const lowercaseMethod = String(method).toLowerCase()
-  let csrf_token
+  let csrfToken
   if (!ignoreMethods.some(method => method.toLowerCase() === lowercaseMethod)) {
-    csrf_token = await helpers.getCsrfToken(options.jar)
+    csrfToken = await helpers.getCsrfToken(options.jar)
   }
 
   return new Promise((resolve, reject) => {
     options.headers = options.headers || {}
-    if (csrf_token) {
-      options.headers['x-csrf-token'] = csrf_token
+    if (csrfToken) {
+      options.headers['x-csrf-token'] = csrfToken
     }
     request[lowercaseMethod](`${nconf.get('url')}${uri}`, options, (err, res, body) => {
       if (err) reject(err)
@@ -51,7 +51,7 @@ helpers.loginUser = function (username, password, callback) {
     if (err || res.statusCode !== 200) {
       return callback(err || new Error('[[error:invalid-response]]'))
     }
-    const { csrf_token } = body
+    const { csrf_token: csrfToken } = body
     request.post(`${nconf.get('url')}/login`, {
       form: {
         username,
@@ -60,13 +60,13 @@ helpers.loginUser = function (username, password, callback) {
       json: true,
       jar,
       headers: {
-        'x-csrf-token': csrf_token
+        'x-csrf-token': csrfToken
       }
     }, (err, res, body) => {
       if (err) {
         return callback(err || new Error('[[error:invalid-response]]'))
       }
-      callback(null, { jar, res, body, csrf_token })
+      callback(null, { jar, res, body, csrf_token: csrfToken })
     })
   })
 }
@@ -116,7 +116,7 @@ helpers.connectSocketIO = function (res, callback) {
   })
 }
 
-helpers.uploadFile = function (uploadEndPoint, filePath, body, jar, csrf_token, callback) {
+helpers.uploadFile = function (uploadEndPoint, filePath, body, jar, csrfToken, callback) {
   let formData = {
     files: [
       fs.createReadStream(filePath),
@@ -130,7 +130,7 @@ helpers.uploadFile = function (uploadEndPoint, filePath, body, jar, csrf_token, 
     json: true,
     jar,
     headers: {
-      'x-csrf-token': csrf_token
+      'x-csrf-token': csrfToken
     }
   }, (err, res, body) => {
     if (err) {
@@ -196,13 +196,13 @@ helpers.copyFile = function (source, target, callback) {
   }
 }
 
-helpers.invite = async function (body, uid, jar, csrf_token) {
+helpers.invite = async function (body, uid, jar, csrfToken) {
   const res = await requestAsync.post(`${nconf.get('url')}/api/v3/users/${uid}/invites`, {
     jar,
     // using "form" since client "api" module make requests with "application/x-www-form-urlencoded" content-type
     form: body,
     headers: {
-      'x-csrf-token': csrf_token
+      'x-csrf-token': csrfToken
     },
     simple: false,
     resolveWithFullResponse: true
@@ -212,7 +212,7 @@ helpers.invite = async function (body, uid, jar, csrf_token) {
   return { res, body }
 }
 
-helpers.createFolder = function (path, folderName, jar, csrf_token) {
+helpers.createFolder = function (path, folderName, jar, csrfToken) {
   return requestAsync.put(`${nconf.get('url')}/api/v3/files/folder`, {
     jar,
     body: {
@@ -221,7 +221,7 @@ helpers.createFolder = function (path, folderName, jar, csrf_token) {
     },
     json: true,
     headers: {
-      'x-csrf-token': csrf_token
+      'x-csrf-token': csrfToken
     },
     simple: false,
     resolveWithFullResponse: true

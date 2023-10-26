@@ -89,7 +89,6 @@ describe('Search', () => {
             }, next)
           },
           function (_post3Data, next) {
-            post3Data = _post3Data
             setTimeout(next, 500)
           }
         ], next)

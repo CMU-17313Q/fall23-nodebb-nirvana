@@ -2889,11 +2889,11 @@ describe('User', () => {
       it('should block a uid', (done) => {
         User.blocks.add(blockeeUid, 1, (err) => {
           assert.ifError(err)
-          User.blocks.list(1, (err, blocked_uids) => {
+          User.blocks.list(1, (err, blockedUids) => {
             assert.ifError(err)
-            assert.strictEqual(Array.isArray(blocked_uids), true)
-            assert.strictEqual(blocked_uids.length, 1)
-            assert.strictEqual(blocked_uids.includes(blockeeUid), true)
+            assert.strictEqual(Array.isArray(blockedUids), true)
+            assert.strictEqual(blockedUids.length, 1)
+            assert.strictEqual(blockedUids.includes(blockeeUid), true)
             done()
           })
         })
@@ -2919,10 +2919,10 @@ describe('User', () => {
       it('should unblock a uid', (done) => {
         User.blocks.remove(blockeeUid, 1, (err) => {
           assert.ifError(err)
-          User.blocks.list(1, (err, blocked_uids) => {
+          User.blocks.list(1, (err, blockedUids) => {
             assert.ifError(err)
-            assert.strictEqual(Array.isArray(blocked_uids), true)
-            assert.strictEqual(blocked_uids.length, 0)
+            assert.strictEqual(Array.isArray(blockedUids), true)
+            assert.strictEqual(blockedUids.length, 0)
             done()
           })
         })
@@ -2960,11 +2960,11 @@ describe('User', () => {
 
     describe('.list()', () => {
       it('should return a list of blocked uids', (done) => {
-        User.blocks.list(1, (err, blocked_uids) => {
+        User.blocks.list(1, (err, blockedUids) => {
           assert.ifError(err)
-          assert.strictEqual(Array.isArray(blocked_uids), true)
-          assert.strictEqual(blocked_uids.length, 1)
-          assert.strictEqual(blocked_uids.includes(blockeeUid), true)
+          assert.strictEqual(Array.isArray(blockedUids), true)
+          assert.strictEqual(blockedUids.length, 1)
+          assert.strictEqual(blockedUids.includes(blockeeUid), true)
           done()
         })
       })

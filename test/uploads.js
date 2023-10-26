@@ -69,10 +69,10 @@ describe('Upload Controllers', () => {
 
   describe('regular user uploads rate limits', () => {
     let jar
-    let csrf_token
+    let csrfToken
 
     before(async () => {
-      ({ jar, csrf_token } = await helpers.loginUser('malicioususer', 'herpderp'))
+      ({ jar, csrf_token: csrfToken } = await helpers.loginUser('malicioususer', 'herpderp'))
       await privileges.global.give(['groups:upload:post:file'], 'registered-users')
     })
 
@@ -85,7 +85,7 @@ describe('Upload Controllers', () => {
       // upload 2 files per upload in our tests.
       const times = (meta.config.uploadRateLimitThreshold / 2) + 1
       async.timesSeries(times, (i, next) => {
-        helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/503.html'), {}, jar, csrf_token, (err, res, body) => {
+        helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/503.html'), {}, jar, csrfToken, (err, res, body) => {
           if (i + 1 >= times) {
             assert.strictEqual(res.statusCode, 500)
             assert.strictEqual(body.error, '[[error:upload-ratelimit-reached]]')
@@ -109,16 +109,16 @@ describe('Upload Controllers', () => {
 
   describe('regular user uploads', () => {
     let jar
-    let csrf_token
+    let csrfToken
 
     before(async () => {
       meta.config.uploadRateLimitThreshold = 1000;
-      ({ jar, csrf_token } = await helpers.loginUser('regular', 'zugzug'))
+      ({ jar, csrf_token: csrfToken } = await helpers.loginUser('regular', 'zugzug'))
       await privileges.global.give(['groups:upload:post:file'], 'registered-users')
     })
 
     it('should upload an image to a post', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(body && body.status && body.response && body.response.images)
@@ -129,7 +129,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should upload an image to a post and then delete the upload', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.strictEqual(res.statusCode, 200)
         assert(body && body.status && body.response && body.response.images)
@@ -165,7 +165,7 @@ describe('Upload Controllers', () => {
       const oldValue = meta.config.resizeImageWidth
       meta.config.resizeImageWidth = 10
       meta.config.resizeImageWidthThreshold = 10
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(body && body.status && body.response && body.response.images)
@@ -181,7 +181,7 @@ describe('Upload Controllers', () => {
     it('should upload a file to a post', (done) => {
       const oldValue = meta.config.allowedFileExtensions
       meta.config.allowedFileExtensions = 'png,jpg,bmp,html'
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/503.html'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/503.html'), {}, jar, csrfToken, (err, res, body) => {
         meta.config.allowedFileExtensions = oldValue
         assert.ifError(err)
         assert.strictEqual(res.statusCode, 200)
@@ -193,7 +193,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should fail to upload image to post if image dimensions are too big', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/toobig.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/toobig.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.strictEqual(res.statusCode, 500)
         assert(body && body.status && body.status.message)
@@ -203,7 +203,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should fail to upload image to post if image is broken', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/brokenimage.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/brokenimage.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.strictEqual(res.statusCode, 500)
         assert(body && body.status && body.status.message)
@@ -322,19 +322,19 @@ describe('Upload Controllers', () => {
 
   describe('admin uploads', () => {
     let jar
-    let csrf_token
+    let csrfToken
     let regularJar
-    let regular_csrf_token
+    let regularCsrfToken
 
     before(async () => {
-      ({ jar, csrf_token } = await helpers.loginUser('admin', 'barbar'))
+      ({ jar, csrf_token: csrfToken } = await helpers.loginUser('admin', 'barbar'))
       const regularLogin = await helpers.loginUser('regular', 'zugzug')
       regularJar = regularLogin.jar
-      regular_csrf_token = regularLogin.csrf_token
+      regularCsrfToken = regularLogin.csrf_token
     })
 
     it('should upload site logo', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadlogo`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadlogo`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(Array.isArray(body))
@@ -344,7 +344,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should fail to upload invalid file type', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/503.html'), { params: JSON.stringify({ cid }) }, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/503.html'), { params: JSON.stringify({ cid }) }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(body.error, '[[error:invalid-image-type, image/png&#44; image/jpeg&#44; image/pjpeg&#44; image/jpg&#44; image/gif&#44; image/svg+xml]]')
         done()
@@ -352,7 +352,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should fail to upload category image with invalid json params', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/test.png'), { params: 'invalid json' }, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/test.png'), { params: 'invalid json' }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(body.error, '[[error:invalid-json]]')
         done()
@@ -360,7 +360,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should upload category image', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/test.png'), { params: JSON.stringify({ cid }) }, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/category/uploadpicture`, path.join(__dirname, '../test/files/test.png'), { params: JSON.stringify({ cid }) }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(Array.isArray(body))
@@ -370,7 +370,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should upload default avatar', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadDefaultAvatar`, path.join(__dirname, '../test/files/test.png'), { }, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadDefaultAvatar`, path.join(__dirname, '../test/files/test.png'), { }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert.equal(body[0].url, `${nconf.get('relative_path')}/assets/uploads/system/avatar-default.png`)
@@ -379,7 +379,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should upload og image', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadOgImage`, path.join(__dirname, '../test/files/test.png'), { }, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadOgImage`, path.join(__dirname, '../test/files/test.png'), { }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert.equal(body[0].url, `${nconf.get('relative_path')}/assets/uploads/system/og-image.png`)
@@ -388,7 +388,7 @@ describe('Upload Controllers', () => {
     })
 
     it('should upload favicon', (done) => {
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadfavicon`, path.join(__dirname, '../test/files/favicon.ico'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadfavicon`, path.join(__dirname, '../test/files/favicon.ico'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(Array.isArray(body))
@@ -399,7 +399,7 @@ describe('Upload Controllers', () => {
 
     it('should upload touch icon', (done) => {
       const touchiconAssetPath = '/assets/uploads/system/touchicon-orig.png'
-      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadTouchIcon`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token, (err, res, body) => {
+      helpers.uploadFile(`${nconf.get('url')}/api/admin/uploadTouchIcon`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(Array.isArray(body))
@@ -419,7 +419,7 @@ describe('Upload Controllers', () => {
         params: JSON.stringify({
           folder: 'system'
         })
-      }, jar, csrf_token, (err, res, body) => {
+      }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
         assert(Array.isArray(body))
@@ -434,7 +434,7 @@ describe('Upload Controllers', () => {
         params: JSON.stringify({
           folder: '../../system'
         })
-      }, jar, csrf_token, (err, res, body) => {
+      }, jar, csrfToken, (err, res, body) => {
         assert.ifError(err)
         assert.equal(res.statusCode, 500)
         assert.strictEqual(body.error, '[[error:invalid-path]]')
@@ -444,13 +444,13 @@ describe('Upload Controllers', () => {
 
     describe('ACP uploads screen', () => {
       it('should create a folder', async () => {
-        const res = await helpers.createFolder('', 'myfolder', jar, csrf_token)
+        const res = await helpers.createFolder('', 'myfolder', jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
         assert(file.existsSync(path.join(nconf.get('upload_path'), 'myfolder')))
       })
 
       it('should fail to create a folder if it already exists', async () => {
-        const res = await helpers.createFolder('', 'myfolder', jar, csrf_token)
+        const res = await helpers.createFolder('', 'myfolder', jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.deepStrictEqual(res.body.status, {
           code: 'forbidden',
@@ -459,7 +459,7 @@ describe('Upload Controllers', () => {
       })
 
       it('should fail to create a folder as a non-admin', async () => {
-        const res = await helpers.createFolder('', 'hisfolder', regularJar, regular_csrf_token)
+        const res = await helpers.createFolder('', 'hisfolder', regularJar, regularCsrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.deepStrictEqual(res.body.status, {
           code: 'forbidden',
@@ -468,7 +468,7 @@ describe('Upload Controllers', () => {
       })
 
       it('should fail to create a folder in wrong directory', async () => {
-        const res = await helpers.createFolder('../traversing', 'unexpectedfolder', jar, csrf_token)
+        const res = await helpers.createFolder('../traversing', 'unexpectedfolder', jar, csrfToken)
         assert.strictEqual(res.statusCode, 403)
         assert.deepStrictEqual(res.body.status, {
           code: 'forbidden',
@@ -477,7 +477,7 @@ describe('Upload Controllers', () => {
       })
 
       it('should use basename of given folderName to create new folder', async () => {
-        const res = await helpers.createFolder('/myfolder', '../another folder', jar, csrf_token)
+        const res = await helpers.createFolder('/myfolder', '../another folder', jar, csrfToken)
         assert.strictEqual(res.statusCode, 200)
         const slugifiedName = 'another-folder'
         assert(file.existsSync(path.join(nconf.get('upload_path'), 'myfolder', slugifiedName)))
@@ -491,7 +491,7 @@ describe('Upload Controllers', () => {
           jar: regularJar,
           json: true,
           headers: {
-            'x-csrf-token': regular_csrf_token
+            'x-csrf-token': regularCsrfToken
           },
           simple: false,
           resolveWithFullResponse: true
@@ -510,8 +510,8 @@ describe('Upload Controllers', () => {
   describe('library methods', () => {
     describe('.getOrphans()', () => {
       before(async () => {
-        const { jar, csrf_token } = await helpers.loginUser('regular', 'zugzug')
-        await helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token)
+        const { jar, csrf_token: csrfToken } = await helpers.loginUser('regular', 'zugzug')
+        await helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken)
       })
 
       it('should return files with no post associated with them', async () => {
@@ -531,8 +531,8 @@ describe('Upload Controllers', () => {
       let _orphanExpiryDays
 
       before(async () => {
-        const { jar, csrf_token } = await helpers.loginUser('regular', 'zugzug')
-        await helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrf_token)
+        const { jar, csrf_token: csrfToken } = await helpers.loginUser('regular', 'zugzug')
+        await helpers.uploadFile(`${nconf.get('url')}/api/post/upload`, path.join(__dirname, '../test/files/test.png'), {}, jar, csrfToken)
 
         // modify all files in uploads folder to be 30 days old
         const files = await fs.readdir(`${nconf.get('upload_path')}/files`)

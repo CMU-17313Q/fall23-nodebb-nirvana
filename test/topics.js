@@ -34,7 +34,7 @@ describe('Topic\'s', () => {
   let categoryObj
   let adminUid
   let adminJar
-  let csrf_token
+  let csrfToken
   let fooUid
 
   before(async () => {
@@ -43,7 +43,7 @@ describe('Topic\'s', () => {
     await groups.join('administrators', adminUid)
     const adminLogin = await helpers.loginUser('admin', '123456')
     adminJar = adminLogin.jar
-    csrf_token = adminLogin.csrf_token
+    csrfToken = adminLogin.csrf_token
 
     categoryObj = await categories.create({
       name: 'Test Category',
@@ -2723,7 +2723,7 @@ describe('Topic\'s', () => {
         json: true,
         jar: adminJar,
         headers: {
-          'x-csrf-token': csrf_token
+          'x-csrf-token': csrfToken
         }
       }
       categoryObj = await categories.create({

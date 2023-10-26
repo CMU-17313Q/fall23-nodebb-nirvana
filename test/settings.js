@@ -2,14 +2,14 @@
 
 const assert = require('assert')
 
-const settings = require('../src/settings')
+const Settings = require('../src/settings')
 
 describe('settings v3', () => {
   let settings1
   let settings2
 
   it('should create a new settings object', (done) => {
-    settings1 = new settings('my-plugin', '1.0', { foo: 1, bar: { derp: 2 } }, done)
+    settings1 = new Settings('my-plugin', '1.0', { foo: 1, bar: { derp: 2 } }, done)
   })
 
   it('should get the saved settings ', (done) => {
@@ -19,7 +19,7 @@ describe('settings v3', () => {
   })
 
   it('should create a new settings instance for same key', (done) => {
-    settings2 = new settings('my-plugin', '1.0', { foo: 1, bar: { derp: 2 } }, done)
+    settings2 = new Settings('my-plugin', '1.0', { foo: 1, bar: { derp: 2 } }, done)
   })
 
   it('should pass change between settings object over pubsub', (done) => {
@@ -50,7 +50,7 @@ describe('settings v3', () => {
   })
 
   it('should get value from default value', (done) => {
-    const newSettings = new settings('some-plugin', '1.0', { default: { value: 1 } })
+    const newSettings = new Settings('some-plugin', '1.0', { default: { value: 1 } })
     assert.equal(newSettings.get('default.value'), 1)
     done()
   })
