@@ -120,7 +120,7 @@ describe('authentication', () => {
         assert.strictEqual(validationPending, true)
         assert.ifError(err)
         assert(body)
-        assert(body.hasOwnProperty('uid') && body.uid > 0)
+        assert(Object.hasOwn(body, 'uid') && body.uid > 0)
         const newUid = body.uid
         request({
           url: `${nconf.get('url')}/api/self`,

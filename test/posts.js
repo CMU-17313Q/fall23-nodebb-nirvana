@@ -593,7 +593,7 @@ describe('Post\'s', () => {
       assert.strictEqual(data.topic.title, 'edited title')
       assert.strictEqual(data.topic.tags[0].value, 'edited')
       const res = await db.getObject(`post:${pid}`)
-      assert(!res.hasOwnProperty('bookmarks'))
+      assert(!Object.hasOwn(res, 'bookmarks'))
     })
 
     it('should edit anonymity post', async () => {

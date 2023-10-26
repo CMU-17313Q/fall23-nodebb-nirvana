@@ -296,8 +296,8 @@ describe('API', async () => {
 
           const normalizedPath = pathObj.path.replace(/\/:([^\\/]+)/g, '/{$1}').replace(/\?/g, '')
           if (!pathObj.path.startsWith('/forum/debug/')) {
-            assert(schema.paths.hasOwnProperty(normalizedPath), `${pathObj.path} is not defined in schema docs`)
-            assert(schema.paths[normalizedPath].hasOwnProperty(pathObj.method), `${pathObj.path} was found in schema docs, but ${pathObj.method.toUpperCase()} method is not defined`)
+            assert(Object.hasOwn(schema.paths, normalizedPath), `${pathObj.path} is not defined in schema docs`)
+            assert(Object.hasOwn(schema.paths[normalizedPath], pathObj.method), `${pathObj.path} was found in schema docs, but ${pathObj.method.toUpperCase()} method is not defined`)
           }
         })
       })
@@ -366,16 +366,16 @@ describe('API', async () => {
         })
 
         it(`${_method.toUpperCase()} ${path}: should contain a valid request body (if present) with application/json or multipart/form-data type if POST/PUT/DELETE`, () => {
-          if (['post', 'put', 'delete'].includes(method) && context[method].hasOwnProperty('requestBody')) {
+          if (['post', 'put', 'delete'].includes(method) && Object.hasOwn(context[method], 'requestBody')) {
             const failMessage = `${method.toUpperCase()} ${path} has a malformed request body`
             assert(context[method].requestBody, failMessage)
             assert(context[method].requestBody.content, failMessage)
 
-            if (context[method].requestBody.content.hasOwnProperty('application/json')) {
+            if (Object.hasOwn(context[method].requestBody.content, 'application/json')) {
               assert(context[method].requestBody.content['application/json'], failMessage)
               assert(context[method].requestBody.content['application/json'].schema, failMessage)
               assert(context[method].requestBody.content['application/json'].schema.properties, failMessage)
-            } else if (context[method].requestBody.content.hasOwnProperty('multipart/form-data')) {
+            } else if (Object.hasOwn(context[method].requestBody.content, 'multipart/form-data')) {
               assert(context[method].requestBody.content['multipart/form-data'], failMessage)
               assert(context[method].requestBody.content['multipart/form-data'].schema, failMessage)
               assert(context[method].requestBody.content['multipart/form-data'].schema.properties, failMessage)
@@ -392,9 +392,9 @@ describe('API', async () => {
 
           let body = {}
           let type = 'json'
-          if (context[method].hasOwnProperty('requestBody') && context[method].requestBody.content['application/json']) {
+          if (Object.hasOwn(context[method], 'requestBody') && context[method].requestBody.content['application/json']) {
             body = buildBody(context[method].requestBody.content['application/json'].schema.properties)
-          } else if (context[method].hasOwnProperty('requestBody') && context[method].requestBody.content['multipart/form-data']) {
+          } else if (Object.hasOwn(context[method], 'requestBody') && context[method].requestBody.content['multipart/form-data']) {
             type = 'form'
           }
 
@@ -428,7 +428,7 @@ describe('API', async () => {
 
         it(`${_method.toUpperCase()} ${path}: response status code should match one of the schema defined responses`, () => {
           // HACK: allow HTTP 418 I am a teapot, for now   👇
-          assert(context[method].responses.hasOwnProperty('418') || Object.keys(context[method].responses).includes(String(response.statusCode)), `${method.toUpperCase()} ${path} sent back unexpected HTTP status code: ${response.statusCode} ${JSON.stringify(response.body)}`)
+          assert(Object.hasOwn(context[method].responses, '418') || Object.keys(context[method].responses).includes(String(response.statusCode)), `${method.toUpperCase()} ${path} sent back unexpected HTTP status code: ${response.statusCode} ${JSON.stringify(response.body)}`)
         })
 
         // Recursively iterate through schema properties, comparing type
@@ -506,7 +506,7 @@ describe('API', async () => {
 
   function compare (schema, response, method, path, context) {
     let required = []
-    const additionalProperties = schema.hasOwnProperty('additionalProperties')
+    const additionalProperties = Object.hasOwn(schema, 'additionalProperties')
 
     function flattenAllOf (obj) {
       return obj.reduce((memo, obj) => {
@@ -536,8 +536,8 @@ describe('API', async () => {
 
     // Compare the schema to the response
     required.forEach((prop) => {
-      if (schema.hasOwnProperty(prop)) {
-        assert(response.hasOwnProperty(prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`)
+      if (Object.hasOwn(schema, prop)) {
+        assert(Object.hasOwn(response, prop), `"${prop}" is a required property (path: ${method} ${path}, context: ${context})`)
 
         // Don't proceed with type-check if the value could possibly be unset (nullable: true, in spec)
         if (response[prop] === null && schema[prop].nullable === true) {

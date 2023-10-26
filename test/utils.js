@@ -441,7 +441,7 @@ describe('Utility Methods', () => {
       user1: user.getUserData(uid1),
       user2: user.getUserData(uid2)
     })
-    assert(result.hasOwnProperty('user1') && result.hasOwnProperty('user2'))
+    assert(Object.hasOwn(result, 'user1') && Object.hasOwn(result, 'user2'))
     assert.strictEqual(result.user1.uid, uid1)
     assert.strictEqual(result.user2.uid, uid2)
   })

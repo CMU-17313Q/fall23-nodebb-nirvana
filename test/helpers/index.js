@@ -154,7 +154,7 @@ helpers.registerUser = function (data, callback) {
       return callback(err)
     }
 
-    if (!data.hasOwnProperty('password-confirm')) {
+    if (!Object.hasOwn(data, 'password-confirm')) {
       data['password-confirm'] = data.password
     }
 

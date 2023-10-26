@@ -476,7 +476,7 @@ describe('Topic\'s', () => {
       topics.getTopicFields(newTopic.tid, ['slug'], (err, data) => {
         assert.ifError(err)
         assert(Object.keys(data).length === 1)
-        assert(data.hasOwnProperty('slug'))
+        assert(Object.hasOwn(data, 'slug'))
         done()
       })
     })

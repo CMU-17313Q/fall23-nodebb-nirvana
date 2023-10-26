@@ -91,7 +91,7 @@ describe('Package install lib', () => {
 
       pkgInstall.updatePackageFile()
       const updated = JSON.parse(await fs.readFile(packageFilePath, 'utf8'))
-      assert.strictEqual(updated.devDependencies.hasOwnProperty('expect'), false)
+      assert.strictEqual(Object.hasOwn(updated.devDependencies, 'expect'), false)
     })
 
     it('should handle if there is no package.json', async () => {

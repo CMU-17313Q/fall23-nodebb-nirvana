@@ -771,10 +771,10 @@ describe('User', () => {
         assert.ifError(err)
         User.getUserData(testUid, (err, userData) => {
           assert.ifError(err)
-          assert(!userData.hasOwnProperty('fb_token'))
-          assert(!userData.hasOwnProperty('another_secret'))
-          assert(!userData.hasOwnProperty('password'))
-          assert(!userData.hasOwnProperty('rss_token'))
+          assert(!Object.hasOwn(userData, 'fb_token'))
+          assert(!Object.hasOwn(userData, 'another_secret'))
+          assert(!Object.hasOwn(userData, 'password'))
+          assert(!Object.hasOwn(userData, 'rss_token'))
           assert.strictEqual(userData.postcount, 123)
           assert.strictEqual(userData.uid, testUid)
           done()
@@ -785,7 +785,7 @@ describe('User', () => {
     it('should not return password even if explicitly requested', (done) => {
       User.getUserFields(testUid, ['password'], (err, payload) => {
         assert.ifError(err)
-        assert(!payload.hasOwnProperty('password'))
+        assert(!Object.hasOwn(payload, 'password'))
         done()
       })
     })
@@ -822,7 +822,7 @@ describe('User', () => {
       plugins.hooks.register('test-plugin', { hook: 'filter:user.whitelistFields', method: filterMethod })
       User.getUserData(testUid, (err, userData) => {
         assert.ifError(err)
-        assert(!userData.hasOwnProperty('fb_token'))
+        assert(!Object.hasOwn(userData, 'fb_token'))
         assert.equal(userData.another_secret, 'abcde')
         plugins.hooks.unregister('test-plugin', 'filter:user.whitelistFields', filterMethod)
         done()
@@ -2840,10 +2840,10 @@ describe('User', () => {
         assert.ifError(err)
         request(`${nconf.get('url')}/api/recent`, { json: true }, (err, res, body) => {
           assert.ifError(err)
-          assert(!body.topics[0].user.hasOwnProperty('fullname'))
+          assert(!Object.hasOwn(body.topics[0].user, 'fullname'))
           request(`${nconf.get('url')}/api/topic/${body.topics[0].slug}`, { json: true }, (err, res, body) => {
             assert.ifError(err)
-            assert(!body.posts[0].user.hasOwnProperty('fullname'))
+            assert(!Object.hasOwn(body.posts[0].user, 'fullname'))
             done()
           })
         })
@@ -3018,7 +3018,7 @@ describe('User', () => {
           assert.strictEqual(Array.isArray(filtered), true)
           assert.strictEqual(filtered.length, 3)
           filtered.forEach((obj) => {
-            assert.strictEqual(obj.hasOwnProperty('foo'), true)
+            assert.strictEqual(Object.hasOwn(obj, 'foo'), true)
           })
           done()
         })

@@ -1730,7 +1730,7 @@ describe('Controllers', () => {
         meta.config['reputation:disabled'] = 0
         assert.ifError(err)
         assert.equal(res.statusCode, 200)
-        assert(!body.hasOwnProperty('reputation'))
+        assert(!Object.hasOwn(body, 'reputation'))
         done()
       })
     })

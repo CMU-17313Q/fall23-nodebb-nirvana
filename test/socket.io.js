@@ -124,8 +124,8 @@ describe('socket.io', () => {
     const data = await user.getLatestBanInfo(regularUid)
     assert(data.uid)
     assert(data.timestamp)
-    assert(data.hasOwnProperty('banned_until'))
-    assert(data.hasOwnProperty('banned_until_readable'))
+    assert(Object.hasOwn(data, 'banned_until'))
+    assert(Object.hasOwn(data, 'banned_until_readable'))
     assert.equal(data.reason, 'spammer')
   })
 
@@ -365,11 +365,11 @@ describe('socket.io', () => {
         setTimeout(() => {
           socketAdmin.rooms.getAll({ uid: 10 }, {}, (err, data) => {
             assert.ifError(err)
-            assert(data.hasOwnProperty('onlineGuestCount'))
-            assert(data.hasOwnProperty('onlineRegisteredCount'))
-            assert(data.hasOwnProperty('socketCount'))
-            assert(data.hasOwnProperty('topics'))
-            assert(data.hasOwnProperty('users'))
+            assert(Object.hasOwn(data, 'onlineGuestCount'))
+            assert(Object.hasOwn(data, 'onlineRegisteredCount'))
+            assert(Object.hasOwn(data, 'socketCount'))
+            assert(Object.hasOwn(data, 'topics'))
+            assert(Object.hasOwn(data, 'users'))
             done()
           })
         }, 1000)

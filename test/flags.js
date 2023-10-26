@@ -200,7 +200,7 @@ describe('Flags', () => {
         json: true
       })
 
-      assert(flagData.hasOwnProperty('history'))
+      assert(Object.hasOwn(flagData, 'history'))
       assert(flagData.history === null)
     })
   })
@@ -212,9 +212,9 @@ describe('Flags', () => {
         uid: 1
       }, (err, payload) => {
         assert.ifError(err)
-        assert.ok(payload.hasOwnProperty('flags'))
-        assert.ok(payload.hasOwnProperty('page'))
-        assert.ok(payload.hasOwnProperty('pageCount'))
+        assert.ok(Object.hasOwn(payload, 'flags'))
+        assert.ok(Object.hasOwn(payload, 'page'))
+        assert.ok(Object.hasOwn(payload, 'pageCount'))
         assert.ok(Array.isArray(payload.flags))
         assert.equal(payload.flags.length, 1)
 
@@ -236,9 +236,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(1, parseInt(payload.flags[0].flagId, 10))
           done()
@@ -253,9 +253,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(0, payload.flags.length)
           done()
@@ -270,9 +270,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(1, payload.flags.length)
           done()
@@ -287,9 +287,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(0, payload.flags.length)
           done()
@@ -304,9 +304,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(1, payload.flags.length)
           done()
@@ -322,9 +322,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(1, payload.flags.length)
           done()
@@ -340,9 +340,9 @@ describe('Flags', () => {
           uid: 1
         }, (err, payload) => {
           assert.ifError(err)
-          assert.ok(payload.hasOwnProperty('flags'))
-          assert.ok(payload.hasOwnProperty('page'))
-          assert.ok(payload.hasOwnProperty('pageCount'))
+          assert.ok(Object.hasOwn(payload, 'flags'))
+          assert.ok(Object.hasOwn(payload, 'page'))
+          assert.ok(Object.hasOwn(payload, 'pageCount'))
           assert.ok(Array.isArray(payload.flags))
           assert.strictEqual(0, payload.flags.length)
           done()
@@ -936,7 +936,7 @@ describe('Flags', () => {
 
         const { history } = response
         assert(Array.isArray(history))
-        assert(history[0].fields.hasOwnProperty('state'))
+        assert(Object.hasOwn(history[0].fields, 'state'))
         assert.strictEqual('[[flags:state-wip]]', history[0].fields.state)
       })
     })
@@ -957,15 +957,15 @@ describe('Flags', () => {
           json: true
         })
 
-        assert(response.hasOwnProperty('notes'))
+        assert(Object.hasOwn(response, 'notes'))
         assert(Array.isArray(response.notes))
         assert.strictEqual('lorem ipsum dolor sit amet', response.notes[0].content)
         assert.strictEqual(2, response.notes[0].uid)
 
-        assert(response.hasOwnProperty('history'))
+        assert(Object.hasOwn(response, 'history'))
         assert(Array.isArray(response.history))
         assert.strictEqual(1, Object.keys(response.history[response.history.length - 1].fields).length)
-        assert(response.history[response.history.length - 1].fields.hasOwnProperty('notes'))
+        assert(Object.hasOwn(response.history[response.history.length - 1].fields, 'notes'))
       })
     })
 

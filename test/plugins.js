@@ -177,7 +177,7 @@ describe('Plugins', () => {
       assert.equal(data.name, 'nodebb-plugin-markdown')
       assert.equal(data.id, 'nodebb-plugin-markdown')
       keys.forEach((key) => {
-        assert(data.hasOwnProperty(key))
+        assert(Object.hasOwn(data, key))
       })
       done()
     })
@@ -189,7 +189,7 @@ describe('Plugins', () => {
       const keys = ['id', 'name', 'url', 'description', 'latest', 'installed', 'active', 'latest']
       assert(Array.isArray(data))
       keys.forEach((key) => {
-        assert(data[0].hasOwnProperty(key))
+        assert(Object.hasOwn(data[0], key))
       })
       done()
     })
@@ -357,7 +357,7 @@ describe('Plugins', () => {
         const keys = ['id', 'name', 'url', 'description', 'latest', 'installed', 'active', 'latest']
         assert(Array.isArray(data))
         keys.forEach((key) => {
-          assert(data[0].hasOwnProperty(key))
+          assert(Object.hasOwn(data[0], key))
         })
         data.forEach((pluginData) => {
           assert.equal(pluginData.active, activePlugins.includes(pluginData.id))

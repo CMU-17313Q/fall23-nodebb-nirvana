@@ -263,11 +263,11 @@ describe('Search', () => {
       }, (err, response, body) => {
         assert.ifError(err)
         assert(body)
-        assert(body.hasOwnProperty('matchCount'))
-        assert(body.hasOwnProperty('pagination'))
-        assert(body.hasOwnProperty('pageCount'))
-        assert(body.hasOwnProperty('posts'))
-        assert(!body.hasOwnProperty('categories'))
+        assert(Object.hasOwn(body, 'matchCount'))
+        assert(Object.hasOwn(body, 'pagination'))
+        assert(Object.hasOwn(body, 'pageCount'))
+        assert(Object.hasOwn(body, 'posts'))
+        assert(!Object.hasOwn(body, 'categories'))
 
         privileges.global.rescind(['groups:search:content'], 'guests', done)
       })

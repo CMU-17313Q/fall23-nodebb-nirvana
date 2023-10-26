@@ -66,7 +66,7 @@ describe('Topic Events', () => {
       assert(events)
       assert(Array.isArray(events))
       events.forEach((event) => {
-        assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => event.hasOwnProperty(key)))
+        assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => Object.hasOwn(event, key)))
       })
     })
   })
@@ -79,7 +79,7 @@ describe('Topic Events', () => {
       assert(Array.isArray(events))
       assert.strictEqual(events.length, 1)
       events.forEach((event) => {
-        assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => event.hasOwnProperty(key)))
+        assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => Object.hasOwn(event, key)))
       })
     })
   })

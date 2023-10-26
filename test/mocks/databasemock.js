@@ -145,7 +145,7 @@ before(async function () {
   nconf.set('jobsDisabled', false)
 
   await db.init()
-  if (db.hasOwnProperty('createIndices')) {
+  if (Object.hasOwn(db, 'createIndices')) {
     await db.createIndices()
   }
   await setupMockDefaults()
