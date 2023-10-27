@@ -45,7 +45,8 @@ describe('Translator shim', () => {
 describe('new Translator(language)', () => {
   it('should throw if not passed a language', (done) => {
     assert.throws(() => {
-      new Translator()
+      const translator = new Translator()
+      translator.getTranslation('error')
     }, /language string/)
     done()
   })

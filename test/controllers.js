@@ -1250,7 +1250,7 @@ describe('Controllers', () => {
     let csrfToken
 
     before(async () => {
-      ({ jar, csrf_token : csrfToken } = await helpers.loginUser('foo', 'barbar'))
+      ({ jar, csrf_token: csrfToken } = await helpers.loginUser('foo', 'barbar'))
     })
 
     it('should redirect to account page with logged in user', (done) => {
