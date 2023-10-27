@@ -1040,7 +1040,7 @@ describe('Controllers', () => {
       request.del(`${nconf.get('url')}/api/v3/users/doesnotexist/sessions/1112233`, {
         jar,
         headers: {
-          'x-csrf-token': csrf_token
+          'x-csrf-token': csrfToken
         }
       }, (err, res, body) => {
         assert.ifError(err)
@@ -1065,7 +1065,7 @@ describe('Controllers', () => {
           request.del(`${nconf.get('url')}/api/v3/users/${uid}/sessions/${sessionObj.meta.uuid}`, {
             jar,
             headers: {
-              'x-csrf-token': csrf_token
+              'x-csrf-token': csrfToken
             }
           }, (err, res, body) => {
             assert.ifError(err)
@@ -1247,10 +1247,10 @@ describe('Controllers', () => {
 
   describe('account pages', () => {
     let jar
-    let csrf_token
+    let csrfToken
 
     before(async () => {
-      ({ jar, csrf_token } = await helpers.loginUser('foo', 'barbar'))
+      ({ jar, csrf_token : csrfToken } = await helpers.loginUser('foo', 'barbar'))
     })
 
     it('should redirect to account page with logged in user', (done) => {
@@ -1814,7 +1814,7 @@ describe('Controllers', () => {
       assert.strictEqual(res.body, '/register/complete')
 
       await requestAsync({
-        uri: `${nconf.get('url')}/register/abort?_csrf=${csrf_token}`,
+        uri: `${nconf.get('url')}/register/abort?_csrf=${csrfToken}`,
         method: 'post',
         jar,
         simple: false
@@ -2447,13 +2447,13 @@ describe('Controllers', () => {
   })
 
   describe('composer', () => {
-    let csrf_token
+    let csrfToken
     let jar
 
     before(async () => {
       const login = await helpers.loginUser('foo', 'barbar')
       jar = login.jar
-      csrf_token = login.csrf_token
+      csrfToken = login.csrf_token
     })
 
     it('should load the composer route', (done) => {
@@ -2497,7 +2497,7 @@ describe('Controllers', () => {
         },
         jar,
         headers: {
-          'x-csrf-token': csrf_token
+          'x-csrf-token': csrfToken
         }
       }, (err, res, body) => {
         assert.ifError(err)
@@ -2508,7 +2508,7 @@ describe('Controllers', () => {
           },
           jar,
           headers: {
-            'x-csrf-token': csrf_token
+            'x-csrf-token': csrfToken
           }
         }, (err, res, body) => {
           assert.ifError(err)
@@ -2528,7 +2528,7 @@ describe('Controllers', () => {
         form: data,
         jar,
         headers: {
-          'x-csrf-token': csrf_token
+          'x-csrf-token': csrfToken
         }
       }, (err, res) => {
         assert.ifError(err)
@@ -2540,7 +2540,7 @@ describe('Controllers', () => {
           },
           jar,
           headers: {
-            'x-csrf-token': csrf_token
+            'x-csrf-token': csrfToken
           }
         }, (err, res, body) => {
           assert.ifError(err)
