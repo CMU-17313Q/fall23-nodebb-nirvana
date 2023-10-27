@@ -111,7 +111,7 @@ module.exports = function (User) {
             `uid:${uid}:tids_unread`,
             `uid:${uid}:followed_tids`,
             `uid:${uid}:ignored_tids`,
-            `uid:${uid}:blocked_uids`,
+            `uid:${uid}:blockedUids`,
             `user:${uid}:settings`,
             `user:${uid}:usernames`,
             `user:${uid}:emails`,

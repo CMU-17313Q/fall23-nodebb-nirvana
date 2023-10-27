@@ -83,3 +83,4 @@ theme/*.sublime-workspace
 theme/.idea
 theme/.vscode
 theme/node_modules/
+*res.txt

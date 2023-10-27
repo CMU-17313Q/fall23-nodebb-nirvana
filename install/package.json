@@ -11,7 +11,8 @@
     "main": "app.js",
     "scripts": {
         "start": "npx tsc && node loader.js",
-        "lint": "npx tsc && eslint --cache ./nodebb .",
+        "lint": "npx tsc && eslint --cache ./nodebb --ignore-path ./.eslintignore2 .",
+        "testlint": "npx tsc && standard test --fix",
         "test": "npx tsc && nyc --reporter=html --reporter=text-summary mocha",
         "coverage": "nyc report --reporter=text-lcov > ./coverage/lcov.info",
         "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage"
@@ -202,5 +203,16 @@
             "email": "baris@nodebb.org",
             "url": "https://github.com/barisusakli"
         }
-    ]
+    ],
+    "standard": {
+        "globals": [
+            "mocha",
+            "it",
+            "describe",
+            "before",
+            "after",
+            "beforeEach",
+            "afterEach"
+        ]
+    }
 }
