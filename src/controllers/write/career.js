@@ -20,13 +20,27 @@ Career.register = async (req, res) => {
             num_past_internships: userData.num_past_internships,
         };
 
-        userCareerData.prediction = Math.round(Math.random()); // TODO: Change this line to do call and retrieve actual candidate
-        
+        // Call Flask API for prediction using fetch
+        const response = await fetch('https://model-deployed-wrs56wi2ha-uc.a.run.app/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userCareerData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const predictionResult = await response.json();
+        userCareerData.prediction = predictionResult.good_employee;
+
         await user.setCareerData(req.uid, userCareerData);
         db.sortedSetAdd('users:career', req.uid, req.uid);
         res.json({});
     } catch (err) {
         console.log(err);
-        helpers.noScriptErrors(req, res, err.message, 400);
+        res.status(400).json({ error: 'An error occurred while processing your request. Please, try later' });
     }
 };
