@@ -1,0 +1,46 @@
+post:
+  tags:
+    - register
+  summary: registering a student to the career page
+  description: student info writing, calls the model
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            student_id:
+              type: string
+            major: 
+              type: string
+            age: 
+              type: string
+            gender:
+              type: string
+            gpa: 
+              type: string
+            extra_curricular: 
+              type: string
+            num_programming_languages: 
+              type: string
+            num_past_internships:
+              type: string
+  responses:
+    '200':
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: User career data registered successfully
+    '400':
+      description: Error occurred during registering
+      content:
+        application/json:
+          schema:
+            type: object
+            properties: {}
