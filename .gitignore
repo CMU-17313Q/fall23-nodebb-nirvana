@@ -84,3 +84,6 @@ theme/.idea
 theme/.vscode
 theme/node_modules/
 *res.txt
+
+# Career Model: Python Ignores
+__pycache__
