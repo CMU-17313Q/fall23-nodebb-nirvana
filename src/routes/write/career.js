@@ -7,11 +7,10 @@ const middleware = require('../../middleware');
 
 // For students registering in the career module
 module.exports = function () {
+    // adding a login guard middleware
+    const middlewares = [middleware.ensureLoggedIn];
 
-  // adding a login guard middleware
-  const middlewares = [middleware.ensureLoggedIn];
+    setupApiRoute(router, 'post', '/register', [...middlewares], controllers.write.career.register);
 
-  setupApiRoute(router, 'post', '/register', [...middlewares], controllers.write.career.register);
-
-  return router;
+    return router;
 };

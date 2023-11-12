@@ -31,7 +31,7 @@ Write.reload = async (params) => {
         res.locals.isAPI = true;
         next();
     });
-    
+
     router.use('/api/v3/career', require('./career')());
     router.use('/api/v3/users', require('./users')());
     router.use('/api/v3/groups', require('./groups')());
