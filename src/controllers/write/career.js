@@ -1,5 +1,6 @@
 'use strict';
 
+const helpers = require('../helpers');
 const user = require('../../user');
 const db = require('../../database');
 
