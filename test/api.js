@@ -454,12 +454,6 @@ describe('API', async () => {
             return
           }
 
-          // skip the career testing, because it calls the module.
-          // CI/CD issues was allowed
-          if (path === '/career/register') {
-            return
-          }
-
           assert.strictEqual(response.statusCode, 200, `HTTP 200 expected (path: ${method} ${path}`)
 
           const hasJSON = http200.content && http200.content['application/json']
